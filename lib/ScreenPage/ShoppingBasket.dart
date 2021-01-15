@@ -62,7 +62,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   List<bool> ischeckedLarg = [];
   List<int> servno = [];
   List<int> ssize = [];
-
+double criticalkm=10.0;int less=10;int more =20;
   List<OrderItem> orderList;
   int ttprice = 0;
   int ttitems = 0;
@@ -93,6 +93,37 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   @override
   initState() {
     super.initState();
+
+    FirebaseDatabase.instance
+        .reference()
+        .child("admindeliveryprice")
+        .child("less")
+        .once()
+        .then((DataSnapshot data1) {
+          setState(() {
+            less = data1.value;
+          });
+    });
+    FirebaseDatabase.instance
+        .reference()
+        .child("admindeliveryprice")
+        .child("more")
+        .once()
+        .then((DataSnapshot data1) {
+      setState(() {
+        more = data1.value;
+      });
+    });
+    FirebaseDatabase.instance
+        .reference()
+        .child("admindeliveryprice")
+        .child("criticalkm")
+        .once()
+        .then((DataSnapshot data1) {
+      setState(() {
+        criticalkm= data1.value;
+      });
+    });
     arrange = ServerValue.timestamp;
     var initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
     var initializationSettingsIOs = IOSInitializationSettings();
@@ -1382,10 +1413,10 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                 textColor: Colors.white);
                           } else {
                             var amount = globals.deliverycheck
-                                ? (globals.distance > 10.0
-                                    ? (ttprice * (1 - discount) + 20)
+                                ? (globals.distance > criticalkm
+                                    ? (ttprice * (1 - discount) + more)
                                         .toStringAsFixed(1)
-                                    : (ttprice * (1 - discount) + 10)
+                                    : (ttprice * (1 - discount) + less)
                                         .toStringAsFixed(1))
                                 : (ttprice * (1 - discount) + 0)
                                     .toStringAsFixed(0);
@@ -1500,17 +1531,17 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                       globals.address_gps,
                                                   'ttprice': globals
                                                           .deliverycheck
-                                                      ? (globals.distance > 10.0
+                                                      ? (globals.distance > criticalkm
                                                           ? (ttprice *
                                                                       (1 -
                                                                           discount) +
-                                                                  20)
+                                                                  more)
                                                               .toStringAsFixed(
                                                                   1)
                                                           : (ttprice *
                                                                       (1 -
                                                                           discount) +
-                                                                  10)
+                                                                  less)
                                                               .toStringAsFixed(
                                                                   1))
                                                       : (ttprice *
@@ -1560,17 +1591,17 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                     'ttprice': globals
                                                             .deliverycheck
                                                         ? (globals.distance >
-                                                                10.0
+                                                        criticalkm
                                                             ? (ttprice *
                                                                         (1 -
                                                                             discount) +
-                                                                    20)
+                                                                    more)
                                                                 .toStringAsFixed(
                                                                     1)
                                                             : (ttprice *
                                                                         (1 -
                                                                             discount) +
-                                                                    10)
+                                                                    less)
                                                                 .toStringAsFixed(
                                                                     1))
                                                         : (ttprice *
@@ -1693,16 +1724,16 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                 'address_gps':
                                                     globals.address_gps,
                                                 'ttprice': globals.deliverycheck
-                                                    ? (globals.distance > 10.0
+                                                    ? (globals.distance > criticalkm
                                                         ? (ttprice *
                                                                     (1 -
                                                                         discount) +
-                                                                20)
+                                                                more)
                                                             .toStringAsFixed(1)
                                                         : (ttprice *
                                                                     (1 -
                                                                         discount) +
-                                                                10)
+                                                                less)
                                                             .toStringAsFixed(1))
                                                     : (ttprice *
                                                                 (1 - discount) +
@@ -1750,17 +1781,17 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                       'ttprice': globals
                                                               .deliverycheck
                                                           ? (globals.distance >
-                                                                  10.0
+                                                          criticalkm
                                                               ? (ttprice *
                                                                           (1 -
                                                                               discount) +
-                                                                      20)
+                                                                      more)
                                                                   .toStringAsFixed(
                                                                       1)
                                                               : (ttprice *
                                                                           (1 -
                                                                               discount) +
-                                                                      10)
+                                                                      less)
                                                                   .toStringAsFixed(
                                                                       1))
                                                           : (ttprice *
