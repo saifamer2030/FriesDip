@@ -14,7 +14,6 @@ import 'package:friesdip/DrawerScreenPage/CustomDrawer.dart';
 import 'package:friesdip/DrawerScreenPage/MenuPage.dart';
 import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
-import 'package:friesdip/PaymentTellr/Name.dart';
 import 'package:friesdip/PaymentTellr/TelrPage.dart';
 import 'package:friesdip/PaymentTellr/payment_card.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';

@@ -13,13 +13,11 @@ import 'package:friesdip/DrawerScreenPage/CustomDrawer.dart';
 import 'package:friesdip/DrawerScreenPage/MenuPage.dart';
 import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
-import 'package:friesdip/PaymentTellr/Name.dart';
-import 'package:friesdip/PaymentTellr/payment_card.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
+import 'package:friesdip/PaymentTellr/thankyou.dart';
 import 'package:friesdip/ScreenPage/HomePage.dart';
 import 'package:friesdip/ScreenPage/map_view.dart';
-import 'package:friesdip/ScreenPage/paymentCheckOut/CreditCardPage.dart';
 import 'package:gradual_stepper/gradual_stepper.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -94,10 +92,13 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   initState() {
     super.initState();
     arrange = ServerValue.timestamp;
-    var initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@drawable/ic_notification');
     var initializationSettingsIOs = IOSInitializationSettings();
-    var initSetttings = InitializationSettings( android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
-    flutterLocalNotificationsPlugin.initialize( initSetttings, /*onSelectNotification: onSelectNotification*/
+    var initSetttings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
+    flutterLocalNotificationsPlugin.initialize(
+      initSetttings, /*onSelectNotification: onSelectNotification*/
     );
     if (orderList == null) {
       orderList = List<OrderItem>();
@@ -180,19 +181,30 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
     print("hhhh11h$promo_title_ar");
   }
 
-  showAlertDialog(BuildContext context, int id, String title_ar, String title_en, int position) {
+  showAlertDialog(BuildContext context, int id, String title_ar,
+      String title_en, int position) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text(translator.translate('cancel')),
-      onPressed: () {Navigator.of(context).pop();}, );
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
     Widget continueButton = FlatButton(
       child: Text(translator.translate('confirmation')),
       onPressed: () async {
         int result = await databaseHelper.deleteOrder(id).then((value) {
           if (value != 0) {
-            Fluttertoast.showToast( msg: translator.translate("deleted"), backgroundColor: Colors.black, textColor: Colors.white);
+            Fluttertoast.showToast(
+                msg: translator.translate("deleted"),
+                backgroundColor: Colors.black,
+                textColor: Colors.white);
 
-            Navigator.push( context, MaterialPageRoute( builder: (context) => Hero(tag: new Text("hero1"), child: ShoppingBasket())));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Hero(tag: new Text("hero1"), child: ShoppingBasket())));
             // setState(() {
             //
             //   Future.delayed(Duration(seconds: 0), () async {
@@ -1372,8 +1384,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () {
-                          print("kkk$deleted$blocked");
+                        onTap: () async {
+                          print(globals.address_gps);
 
                           if (blocked) {
                             Fluttertoast.showToast(
@@ -1390,110 +1402,131 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                 : (ttprice * (1 - discount) + 0)
                                     .toStringAsFixed(0);
                             if (count != 0 &&
+/*
                                 _userid != null &&
+*/
                                 _character == SingingCharacter.onlinpyment) {
-                            setState(() {
-                              Future.delayed(Duration(seconds: 0),
-                                      () async {
-                                    OrderItemforBill orderforbill1 =
-                                    await databaseHelper
-                                        .alldatafororder()
-                                        .then((orderforbill) async {
-                                      if (orderforbill.size.contains("5")) {Fluttertoast.showToast( msg: translator.translate('select_size'), backgroundColor: Colors.black, textColor: Colors.white);
-                                      } else
-                                      {
-                                        // PaymentCard.PaymentCard _card = PaymentCard.PaymentCard( _cardNumberController.text, _cardExpiryMonth.text, _cardExpiryYear.text,_cardcvv.text);
-                                        //    PaymentCard.PaymentCard _card = PaymentCard.PaymentCard('4000 0000 0000 0002', "12", "20", "123");
-                                        //    double _price = (300);
-                                        Address _address = new Address( 'Street 1 - line 3 - block 5', 'RIYADH', 'SA', 'RIYADH', '11543');
-                                        Name _name = new Name('noor', 'ali');
-                                        Telr _Telr=new Telr();
-                                        try {
-
-                                          PaymentResponse response = await _Telr.payForOrder(1, _address, _name, null,'0567899967');
-                                          if (response.status == 'Approved') {
-                                            /*  _orderController.createOrder(await _appService.getItems()).then((value) async {
-                                if (value) {
-                                  await _appService.deleteAll();
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => ThankYouPage()));
-                                } else {
-                                  setState(() {
-                                    _hasError = true;
-                                    _loading = false;
-                                    _errorMessage =
-                                        'Order creation error, please contact admin';
-                                  });
-                                }
-                              });
                               setState(() {
-                                _hasError = false;
-                              });*/
-                                          }
-                                        } catch (e) {
-                                          setState(() {
-                                          /*  _loading = false;
-                                            _hasError = true;
-                                            _errorMessage = 'Error in card, please try again';*/
-                                          });
+                                Future.delayed(Duration(seconds: 0), () async {
+                                  OrderItemforBill orderforbill1 =
+                                      await databaseHelper
+                                          .alldatafororder()
+                                          .then((orderforbill) async {
+                                    if (orderforbill.size.contains("5")) {
+                                      Fluttertoast.showToast(
+                                          msg: translator
+                                              .translate('select_size'),
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white);
+                                    } else {
+                                      Address _address = new Address(
+                                         ' s1,s2,sa',
+                                          'RIYADH',
+                                          'SA',
+                                          'RIYADH',
+                                          '11543');
+                                      Telr _Telr = new Telr();
+                                      try {
+
+                                        PaymentResponse response = await _Telr.payForOrder( ttprice,_address, null,arrange);
+                                        if (response.status == 'Approved') {
+                                          Navigator.of(context).pushReplacement( MaterialPageRoute( builder: (context) => ThankYouPage()));
+
                                         }
-                                        // هنا بيروح لصفحة الدفع الالكتروني بس ما تحذفيها عايزها :)
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => CreditCardPage(
-                                        //             amount,
-                                        //             ttitems,
-                                        //             _NumberPhone,
-                                        //             deliverytime,
-                                        //             deleted)
-                                        //     )
-                                        // );
+                                      } catch (e) {
+                                        setState(() {
 
 
+
+                                        });
                                       }
-                                    });
+                                    }
                                   });
-                            });
-
+                                });
+                              });
                             } else {
                               if (_userid == null || deleted) {
                                 FirebaseAuth.instance.signOut();
-                                Navigator.push( context, MaterialPageRoute( builder: (context) => SignIn()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SignIn()));
                               } else {
                                 if (count == 0) {
-                                  Fluttertoast.showToast( msg: translator.translate('no_data'), backgroundColor: Colors.black, textColor: Colors.white);
+                                  Fluttertoast.showToast(
+                                      msg: translator.translate('no_data'),
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white);
                                 } else {
                                   setState(() {
                                     _load = true;
-                                    Future.delayed(Duration(seconds: 0), () async {
-                                      OrderItemforBill orderforbill1 = await databaseHelper.alldatafororder().then((orderforbill) {
+                                    Future.delayed(Duration(seconds: 0),
+                                        () async {
+                                      OrderItemforBill orderforbill1 =
+                                          await databaseHelper
+                                              .alldatafororder()
+                                              .then((orderforbill) {
                                         if (orderforbill.size.contains("5")) {
-                                          Fluttertoast.showToast( msg: translator.translate('select_size'), backgroundColor: Colors.black, textColor: Colors.white);
-                                        } else
-                                          {
+                                          Fluttertoast.showToast(
+                                              msg: translator
+                                                  .translate('select_size'),
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white);
+                                        } else {
                                           if (globals.deliverycheck) {
                                             /////////delivery////////////
                                             if (globals.distancecheck) {
-                                              if (globals.address_gps == "" || globals.address_gps == null || globals.branch_id == "" || globals.branch_id == null) {
-                                                Fluttertoast.showToast( msg: translator.translate( 'enter_ur_address'), backgroundColor: Colors.black, textColor: Colors.white);
+                                              if (globals.address_gps == "" ||
+                                                  globals.address_gps == null ||
+                                                  globals.branch_id == "" ||
+                                                  globals.branch_id == null) {
+                                                Fluttertoast.showToast(
+                                                    msg: translator.translate(
+                                                        'enter_ur_address'),
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                    textColor: Colors.white);
                                               } else {
                                                 //send data to branch
 
                                                 DateTime now = DateTime.now();
 
                                                 final orderbranchdatabaseReference =
-                                                    FirebaseDatabase.instance.reference().child( "orderListforBranch").child( globals.branch_id);
-                                                final orderuserdatabaseReference = FirebaseDatabase.instance.reference().child( "orderListforuser").child(_userid);
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            "orderListforBranch")
+                                                        .child(
+                                                            globals.branch_id);
+                                                final orderuserdatabaseReference =
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            "orderListforuser")
+                                                        .child(_userid);
 
-                                                String orderid = orderbranchdatabaseReference.push().key;
+                                                String orderid =
+                                                    orderbranchdatabaseReference
+                                                        .push()
+                                                        .key;
 
-                                                orderbranchdatabaseReference.child(orderid).set({'carrange': arrange, 'orderId': orderid, 'userid': _userid, 'cdate': now.toString(),
+                                                orderbranchdatabaseReference
+                                                    .child(orderid)
+                                                    .set({
+                                                  'carrange': arrange,
+                                                  'orderId': orderid,
+                                                  'userid': _userid,
+                                                  'cdate': now.toString(),
                                                   'NumberPhoneUser':
                                                       _NumberPhone,
-                                                  'Payment': _character == SingingCharacter.cash ? 'Cash' : 'ATM', 'branch_id': globals.branch_id,
-                                                  'deliverycheck': globals.deliverycheck,
+                                                  'Payment': _character ==
+                                                          SingingCharacter.cash
+                                                      ? 'Cash'
+                                                      : 'ATM',
+                                                  'branch_id':
+                                                      globals.branch_id,
+                                                  'deliverycheck':
+                                                      globals.deliverycheck,
                                                   'lat_gps': globals.lat_gps,
                                                   'long_gps': globals.long_gps,
                                                   'address_gps':
@@ -1881,7 +1914,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.push(
                               context,
                               MaterialPageRoute(

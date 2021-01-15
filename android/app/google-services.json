@@ -8,12 +8,52 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172053553403:android:c05988d5ef51f0c3c2d05e",
+        "mobilesdk_app_id": "1:172053553403:android:72a796d0c70ac22bc2d05e",
         "android_client_info": {
-          "package_name": "com.arabdevelopers.friesdip"
+          "package_name": "com.arabdevelopers.branches"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "172053553403-0v5th9igvhdnksuqf80r0raap3d7ba6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.branches",
+            "certificate_hash": "8a272be655cb0ba460f26c6532c2b351b1ff3d59"
+          }
+        },
+        {
+          "client_id": "172053553403-9t13c48raqdqmb4ct7n81qbgmlak1tf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.branches",
+            "certificate_hash": "4ca20b86bb10ad4ce7f486b2458f0c9a6557345a"
+          }
+        },
+        {
+          "client_id": "172053553403-g9muukit7hqmsufk61a1kufpcjdtm617.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.branches",
+            "certificate_hash": "84f491303f4836719a368e920ecaacfe3abea5da"
+          }
+        },
+        {
+          "client_id": "172053553403-hqkoagr724q15j5kdmc3duqauev1ai3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.branches",
+            "certificate_hash": "2474e555a66af3eeb7427a837f299556b6dc33c3"
+          }
+        },
+        {
+          "client_id": "172053553403-mrrbdi6t7hujonkvhlglafv8iosi0oh0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.branches",
+            "certificate_hash": "24c88daff534a5560b154cbf54209a0ce7b79e8c"
+          }
+        },
         {
           "client_id": "172053553403-5d7dp01064r3p6vpaal1o7cqh6l1m3c8.apps.googleusercontent.com",
           "client_type": 3
@@ -30,6 +70,14 @@
             {
               "client_id": "172053553403-5d7dp01064r3p6vpaal1o7cqh6l1m3c8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "172053553403-evqg5pp9nlocuu6ptki149h4nie2s7f0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fooddrink.friesdip",
+                "app_store_id": "1545754870"
+              }
             }
           ]
         }
@@ -37,17 +85,126 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172053553403:android:9180932e4c99950cc2d05e",
+        "mobilesdk_app_id": "1:172053553403:android:50cd9cb3a4e6bdcfc2d05e",
         "android_client_info": {
-          "package_name": "com.arabdevelopers.frisedip"
+          "package_name": "com.arabdevelopers.controlpanalefriesdip"
         }
       },
       "oauth_client": [
         {
-          "client_id": "172053553403-665go3amosihuvm3tt5ajmrvtkd3r38u.apps.googleusercontent.com",
+          "client_id": "172053553403-eejcgqhu087mvoqruk5uek019qcht6vo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.arabdevelopers.frisedip",
+            "package_name": "com.arabdevelopers.controlpanalefriesdip",
+            "certificate_hash": "8a272be655cb0ba460f26c6532c2b351b1ff3d59"
+          }
+        },
+        {
+          "client_id": "172053553403-g2b1hsi0t5e3mt6h6iddolub6nla9u2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.controlpanalefriesdip",
+            "certificate_hash": "4ca20b86bb10ad4ce7f486b2458f0c9a6557345a"
+          }
+        },
+        {
+          "client_id": "172053553403-i8jrft5qta7eafeuhaakm34e2m1jq0k2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.controlpanalefriesdip",
+            "certificate_hash": "84f491303f4836719a368e920ecaacfe3abea5da"
+          }
+        },
+        {
+          "client_id": "172053553403-jsdh3gggtjkqskjdra0hteof78j0gnhu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.controlpanalefriesdip",
+            "certificate_hash": "24c88daff534a5560b154cbf54209a0ce7b79e8c"
+          }
+        },
+        {
+          "client_id": "172053553403-5d7dp01064r3p6vpaal1o7cqh6l1m3c8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqQTNe9l2c5HR0LT_W2PfeN3N_2V4YuLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172053553403-5d7dp01064r3p6vpaal1o7cqh6l1m3c8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172053553403-evqg5pp9nlocuu6ptki149h4nie2s7f0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fooddrink.friesdip",
+                "app_store_id": "1545754870"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172053553403:android:c05988d5ef51f0c3c2d05e",
+        "android_client_info": {
+          "package_name": "com.arabdevelopers.friesdip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172053553403-7h8suf754q6u6615m2399327cspc760v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
+            "certificate_hash": "84f491303f4836719a368e920ecaacfe3abea5da"
+          }
+        },
+        {
+          "client_id": "172053553403-ed8tomipe95nascvaabiiqqvpmll66nc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
+            "certificate_hash": "24c88daff534a5560b154cbf54209a0ce7b79e8c"
+          }
+        },
+        {
+          "client_id": "172053553403-opc1go7rt8hql3mj391rl8c9tl3i7k1q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
+            "certificate_hash": "a01c13ec6b6d322e2b6bc06da709b50647d79d35"
+          }
+        },
+        {
+          "client_id": "172053553403-rhb2vgfhebfksdme125r362dhdlu1k2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
+            "certificate_hash": "8a272be655cb0ba460f26c6532c2b351b1ff3d59"
+          }
+        },
+        {
+          "client_id": "172053553403-uigvur9mt0png5e1ked08n47iad8pkcg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
+            "certificate_hash": "2474e555a66af3eeb7427a837f299556b6dc33c3"
+          }
+        },
+        {
+          "client_id": "172053553403-und6uh3scl3fgb4i004pm6vhsq8fkaga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arabdevelopers.friesdip",
             "certificate_hash": "4ca20b86bb10ad4ce7f486b2458f0c9a6557345a"
           }
         },
@@ -67,6 +224,14 @@
             {
               "client_id": "172053553403-5d7dp01064r3p6vpaal1o7cqh6l1m3c8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "172053553403-evqg5pp9nlocuu6ptki149h4nie2s7f0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fooddrink.friesdip",
+                "app_store_id": "1545754870"
+              }
             }
           ]
         }
