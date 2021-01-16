@@ -94,10 +94,13 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   initState() {
     super.initState();
     arrange = ServerValue.timestamp;
-    var initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_notification');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@drawable/ic_notification');
     var initializationSettingsIOs = IOSInitializationSettings();
-    var initSetttings = InitializationSettings( android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
-    flutterLocalNotificationsPlugin.initialize( initSetttings, /*onSelectNotification: onSelectNotification*/
+    var initSetttings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
+    flutterLocalNotificationsPlugin.initialize(
+      initSetttings, /*onSelectNotification: onSelectNotification*/
     );
     if (orderList == null) {
       orderList = List<OrderItem>();
@@ -180,19 +183,30 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
     print("hhhh11h$promo_title_ar");
   }
 
-  showAlertDialog(BuildContext context, int id, String title_ar, String title_en, int position) {
+  showAlertDialog(BuildContext context, int id, String title_ar,
+      String title_en, int position) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text(translator.translate('cancel')),
-      onPressed: () {Navigator.of(context).pop();}, );
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
     Widget continueButton = FlatButton(
       child: Text(translator.translate('confirmation')),
       onPressed: () async {
         int result = await databaseHelper.deleteOrder(id).then((value) {
           if (value != 0) {
-            Fluttertoast.showToast( msg: translator.translate("deleted"), backgroundColor: Colors.black, textColor: Colors.white);
+            Fluttertoast.showToast(
+                msg: translator.translate("deleted"),
+                backgroundColor: Colors.black,
+                textColor: Colors.white);
 
-            Navigator.push( context, MaterialPageRoute( builder: (context) => Hero(tag: new Text("hero1"), child: ShoppingBasket())));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Hero(tag: new Text("hero1"), child: ShoppingBasket())));
             // setState(() {
             //
             //   Future.delayed(Duration(seconds: 0), () async {
@@ -1392,27 +1406,37 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                             if (count != 0 &&
                                 _userid != null &&
                                 _character == SingingCharacter.onlinpyment) {
-                            setState(() {
-                              Future.delayed(Duration(seconds: 0),
-                                      () async {
-                                    OrderItemforBill orderforbill1 =
-                                    await databaseHelper
-                                        .alldatafororder()
-                                        .then((orderforbill) async {
-                                      if (orderforbill.size.contains("5")) {Fluttertoast.showToast( msg: translator.translate('select_size'), backgroundColor: Colors.black, textColor: Colors.white);
-                                      } else
-                                      {
-                                        // PaymentCard.PaymentCard _card = PaymentCard.PaymentCard( _cardNumberController.text, _cardExpiryMonth.text, _cardExpiryYear.text,_cardcvv.text);
-                                        //    PaymentCard.PaymentCard _card = PaymentCard.PaymentCard('4000 0000 0000 0002', "12", "20", "123");
-                                        //    double _price = (300);
-                                        Address _address = new Address( 'Street 1 - line 3 - block 5', 'RIYADH', 'SA', 'RIYADH', '11543');
-                                        Name _name = new Name('noor', 'ali');
-                                        Telr _Telr=new Telr();
-                                        try {
-
-                                          PaymentResponse response = await _Telr.payForOrder(1, _address, _name, null,'0567899967');
-                                          if (response.status == 'Approved') {
-                                            /*  _orderController.createOrder(await _appService.getItems()).then((value) async {
+                              setState(() {
+                                Future.delayed(Duration(seconds: 0), () async {
+                                  OrderItemforBill orderforbill1 =
+                                      await databaseHelper
+                                          .alldatafororder()
+                                          .then((orderforbill) async {
+                                    if (orderforbill.size.contains("5")) {
+                                      Fluttertoast.showToast(
+                                          msg: translator
+                                              .translate('select_size'),
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white);
+                                    } else {
+                                      // PaymentCard.PaymentCard _card = PaymentCard.PaymentCard( _cardNumberController.text, _cardExpiryMonth.text, _cardExpiryYear.text,_cardcvv.text);
+                                      //    PaymentCard.PaymentCard _card = PaymentCard.PaymentCard('4000 0000 0000 0002', "12", "20", "123");
+                                      //    double _price = (300);
+                                      Address _address = new Address(
+                                          'Street 1 - line 3 - block 5',
+                                          'RIYADH',
+                                          'SA',
+                                          'RIYADH',
+                                          '11543');
+                                      Name _name = new Name('noor', 'ali');
+                                      Telr _Telr = new Telr();
+                                      try {
+                                        PaymentResponse response =
+                                            await _Telr.payForOrder(1, _address,
+                                                _name, null, '0567899967');
+                                        if (response.status == 'Approved') {
+                                          print("Approved");
+                                          /*  _orderController.createOrder(await _appService.getItems()).then((value) async {
                                 if (value) {
                                   await _appService.deleteAll();
                                   Navigator.of(context).pushReplacement(
@@ -1430,183 +1454,291 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                               setState(() {
                                 _hasError = false;
                               });*/
-                                          }
-                                        } catch (e) {
-                                          setState(() {
+                                        } else {
+                                          print("NotApproved");
+                                        }
+                                      } catch (e) {
+                                        setState(() {
                                           /*  _loading = false;
                                             _hasError = true;
                                             _errorMessage = 'Error in card, please try again';*/
-                                          });
-                                        }
-                                        // هنا بيروح لصفحة الدفع الالكتروني بس ما تحذفيها عايزها :)
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => CreditCardPage(
-                                        //             amount,
-                                        //             ttitems,
-                                        //             _NumberPhone,
-                                        //             deliverytime,
-                                        //             deleted)
-                                        //     )
-                                        // );
-
-
+                                        });
                                       }
-                                    });
-                                  });
-                            });
+                                      // هنا بيروح لصفحة الدفع الالكتروني بس ما تحذفيها عايزها :)
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) => CreditCardPage(
+                                      //             amount,
+                                      //             ttitems,
+                                      //             _NumberPhone,
+                                      //             deliverytime,
+                                      //             deleted)
+                                      //     )
+                                      // );
 
+                                    }
+                                  });
+                                });
+                              });
                             } else {
                               if (_userid == null || deleted) {
                                 FirebaseAuth.instance.signOut();
-                                Navigator.push( context, MaterialPageRoute( builder: (context) => SignIn()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SignIn()));
                               } else {
                                 if (count == 0) {
-                                  Fluttertoast.showToast( msg: translator.translate('no_data'), backgroundColor: Colors.black, textColor: Colors.white);
+                                  Fluttertoast.showToast(
+                                      msg: translator.translate('no_data'),
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white);
                                 } else {
                                   setState(() {
-                                    _load = true;
-                                    Future.delayed(Duration(seconds: 0), () async {
-                                      OrderItemforBill orderforbill1 = await databaseHelper.alldatafororder().then((orderforbill) {
+                                    Future.delayed(Duration(seconds: 0),
+                                        () async {
+                                      OrderItemforBill orderforbill1 =
+                                          await databaseHelper
+                                              .alldatafororder()
+                                              .then((orderforbill) {
                                         if (orderforbill.size.contains("5")) {
-                                          Fluttertoast.showToast( msg: translator.translate('select_size'), backgroundColor: Colors.black, textColor: Colors.white);
-                                        } else
-                                          {
+                                          Fluttertoast.showToast(
+                                              msg: translator
+                                                  .translate('select_size'),
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white);
+                                        } else {
                                           if (globals.deliverycheck) {
                                             /////////delivery////////////
                                             if (globals.distancecheck) {
-                                              if (globals.address_gps == "" || globals.address_gps == null || globals.branch_id == "" || globals.branch_id == null) {
-                                                Fluttertoast.showToast( msg: translator.translate( 'enter_ur_address'), backgroundColor: Colors.black, textColor: Colors.white);
+                                              if (globals.address_gps == "" ||
+                                                  globals.address_gps == null ||
+                                                  globals.branch_id == "" ||
+                                                  globals.branch_id == null) {
+                                                Fluttertoast.showToast(
+                                                    msg: translator.translate(
+                                                        'enter_ur_address'),
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                    textColor: Colors.white);
                                               } else {
-                                                //send data to branch
+                                                ///////////////////   send data to branch   //////////
 
-                                                DateTime now = DateTime.now();
+                                                Alert(
+                                                  onWillPopActive: true,
+                                                  context: context,
+                                                  type: AlertType.warning,
+                                                  title: translator.translate(
+                                                      'confirmationOrder'),
+                                                  desc: translator.translate(
+                                                      'desConfirmation'),
+                                                  buttons: [
+                                                    DialogButton(
+                                                      child: Text(
+                                                        translator.translate(
+                                                            'confirmation'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _load = true;
+                                                          Navigator.pop(context);
+                                                        });
 
-                                                final orderbranchdatabaseReference =
-                                                    FirebaseDatabase.instance.reference().child( "orderListforBranch").child( globals.branch_id);
-                                                final orderuserdatabaseReference = FirebaseDatabase.instance.reference().child( "orderListforuser").child(_userid);
+                                                        DateTime now =
+                                                            DateTime.now();
 
-                                                String orderid = orderbranchdatabaseReference.push().key;
+                                                        final orderbranchdatabaseReference =
+                                                            FirebaseDatabase
+                                                                .instance
+                                                                .reference()
+                                                                .child(
+                                                                    "orderListforBranch")
+                                                                .child(globals
+                                                                    .branch_id);
+                                                        final orderuserdatabaseReference =
+                                                            FirebaseDatabase
+                                                                .instance
+                                                                .reference()
+                                                                .child(
+                                                                    "orderListforuser")
+                                                                .child(_userid);
 
-                                                orderbranchdatabaseReference.child(orderid).set({'carrange': arrange, 'orderId': orderid, 'userid': _userid, 'cdate': now.toString(),
-                                                  'NumberPhoneUser':
-                                                      _NumberPhone,
-                                                  'Payment': _character == SingingCharacter.cash ? 'Cash' : 'ATM', 'branch_id': globals.branch_id,
-                                                  'deliverycheck': globals.deliverycheck,
-                                                  'lat_gps': globals.lat_gps,
-                                                  'long_gps': globals.long_gps,
-                                                  'address_gps':
-                                                      globals.address_gps,
-                                                  'ttprice': globals
-                                                          .deliverycheck
-                                                      ? (globals.distance > 10.0
-                                                          ? (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  20)
-                                                              .toStringAsFixed(
-                                                                  1)
-                                                          : (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  10)
-                                                              .toStringAsFixed(
-                                                                  1))
-                                                      : (ttprice *
-                                                                  (1 -
-                                                                      discount) +
-                                                              0)
-                                                          .toStringAsFixed(1),
-                                                  'ttitems': ttitems,
-                                                  'item_id_list':
-                                                      orderforbill.item_id,
-                                                  'title_ar_list':
-                                                      orderforbill.title_ar,
-                                                  'title_en_list':
-                                                      orderforbill.title_en,
-                                                  'total_price_list':
-                                                      orderforbill.total_price,
-                                                  'item_no_list':
-                                                      orderforbill.item_no,
-                                                  'size_list':
-                                                      orderforbill.size,
-                                                  'url_list': orderforbill.url,
-                                                  'deliverytime': deliverytime,
-                                                }).whenComplete(() {
-                                                  orderuserdatabaseReference
-                                                      .child(orderid)
-                                                      .set({
-                                                    'carrange': arrange,
-                                                    'orderId': orderid,
-                                                    'userid': _userid,
-                                                    'cdate': now.toString(),
-                                                    'NumberPhoneUser':
-                                                        _NumberPhone,
-                                                    'Payment': _character ==
-                                                            SingingCharacter
-                                                                .cash
-                                                        ? 'Cash'
-                                                        : 'ATM',
-                                                    'branch_id':
-                                                        globals.branch_id,
-                                                    'deliverycheck':
-                                                        globals.deliverycheck,
-                                                    'lat_gps': globals.lat_gps,
-                                                    'long_gps':
-                                                        globals.long_gps,
-                                                    'address_gps':
-                                                        globals.address_gps,
-                                                    'ttprice': globals
-                                                            .deliverycheck
-                                                        ? (globals.distance >
-                                                                10.0
-                                                            ? (ttprice *
-                                                                        (1 -
-                                                                            discount) +
-                                                                    20)
-                                                                .toStringAsFixed(
-                                                                    1)
-                                                            : (ttprice *
-                                                                        (1 -
-                                                                            discount) +
-                                                                    10)
-                                                                .toStringAsFixed(
-                                                                    1))
-                                                        : (ttprice *
-                                                                    (1 -
-                                                                        discount) +
-                                                                0)
-                                                            .toStringAsFixed(1),
-                                                    'ttitems': ttitems,
-                                                    'item_id_list':
-                                                        orderforbill.item_id,
-                                                    'title_ar_list':
-                                                        orderforbill.title_ar,
-                                                    'title_en_list':
-                                                        orderforbill.title_en,
-                                                    'total_price_list':
-                                                        orderforbill
-                                                            .total_price,
-                                                    'item_no_list':
-                                                        orderforbill.item_no,
-                                                    'size_list':
-                                                        orderforbill.size,
-                                                    'url_list':
-                                                        orderforbill.url,
-                                                    'deliverytime':
-                                                        deliverytime,
-                                                  }).whenComplete(() =>
-                                                          Fluttertoast.showToast(
-                                                              msg: translator
-                                                                  .translate(
-                                                                      'done'),
-                                                              backgroundColor:
-                                                                  Colors.black,
-                                                              textColor: Colors
-                                                                  .white));
-                                                  _load = false;
-                                                });
+                                                        String orderid =
+                                                            orderbranchdatabaseReference
+                                                                .push()
+                                                                .key;
+
+                                                        orderbranchdatabaseReference
+                                                            .child(orderid)
+                                                            .set({
+                                                          'carrange': arrange,
+                                                          'orderId': orderid,
+                                                          'userid': _userid,
+                                                          'cdate':
+                                                              now.toString(),
+                                                          'NumberPhoneUser':
+                                                              _NumberPhone,
+                                                          'Payment': _character ==
+                                                                  SingingCharacter
+                                                                      .cash
+                                                              ? 'Cash'
+                                                              : 'ATM',
+                                                          'branch_id':
+                                                              globals.branch_id,
+                                                          'deliverycheck':
+                                                              globals
+                                                                  .deliverycheck,
+                                                          'lat_gps':
+                                                              globals.lat_gps,
+                                                          'long_gps':
+                                                              globals.long_gps,
+                                                          'address_gps': globals
+                                                              .address_gps,
+                                                          'ttprice': globals
+                                                                  .deliverycheck
+                                                              ? (globals.distance >
+                                                                      10.0
+                                                                  ? (ttprice * (1 - discount) +
+                                                                          20)
+                                                                      .toStringAsFixed(
+                                                                          1)
+                                                                  : (ttprice * (1 - discount) +
+                                                                          10)
+                                                                      .toStringAsFixed(
+                                                                          1))
+                                                              : (ttprice *
+                                                                          (1 -
+                                                                              discount) +
+                                                                      0)
+                                                                  .toStringAsFixed(
+                                                                      1),
+                                                          'ttitems': ttitems,
+                                                          'item_id_list':
+                                                              orderforbill
+                                                                  .item_id,
+                                                          'title_ar_list':
+                                                              orderforbill
+                                                                  .title_ar,
+                                                          'title_en_list':
+                                                              orderforbill
+                                                                  .title_en,
+                                                          'total_price_list':
+                                                              orderforbill
+                                                                  .total_price,
+                                                          'item_no_list':
+                                                              orderforbill
+                                                                  .item_no,
+                                                          'size_list':
+                                                              orderforbill.size,
+                                                          'url_list':
+                                                              orderforbill.url,
+                                                          'deliverytime':
+                                                              deliverytime,
+                                                        }).whenComplete(() {
+                                                          orderuserdatabaseReference
+                                                              .child(orderid)
+                                                              .set({
+                                                            'carrange': arrange,
+                                                            'orderId': orderid,
+                                                            'userid': _userid,
+                                                            'cdate':
+                                                                now.toString(),
+                                                            'NumberPhoneUser':
+                                                                _NumberPhone,
+                                                            'Payment': _character ==
+                                                                    SingingCharacter
+                                                                        .cash
+                                                                ? 'Cash'
+                                                                : 'ATM',
+                                                            'branch_id': globals
+                                                                .branch_id,
+                                                            'deliverycheck':
+                                                                globals
+                                                                    .deliverycheck,
+                                                            'lat_gps':
+                                                                globals.lat_gps,
+                                                            'long_gps': globals
+                                                                .long_gps,
+                                                            'address_gps':
+                                                                globals
+                                                                    .address_gps,
+                                                            'ttprice': globals
+                                                                    .deliverycheck
+                                                                ? (globals.distance >
+                                                                        10.0
+                                                                    ? (ttprice * (1 - discount) +
+                                                                            20)
+                                                                        .toStringAsFixed(
+                                                                            1)
+                                                                    : (ttprice * (1 - discount) +
+                                                                            10)
+                                                                        .toStringAsFixed(
+                                                                            1))
+                                                                : (ttprice *
+                                                                            (1 -
+                                                                                discount) +
+                                                                        0)
+                                                                    .toStringAsFixed(
+                                                                        1),
+                                                            'ttitems': ttitems,
+                                                            'item_id_list':
+                                                                orderforbill
+                                                                    .item_id,
+                                                            'title_ar_list':
+                                                                orderforbill
+                                                                    .title_ar,
+                                                            'title_en_list':
+                                                                orderforbill
+                                                                    .title_en,
+                                                            'total_price_list':
+                                                                orderforbill
+                                                                    .total_price,
+                                                            'item_no_list':
+                                                                orderforbill
+                                                                    .item_no,
+                                                            'size_list':
+                                                                orderforbill
+                                                                    .size,
+                                                            'url_list':
+                                                                orderforbill
+                                                                    .url,
+                                                            'deliverytime':
+                                                                deliverytime,
+                                                          }).whenComplete(() => Fluttertoast.showToast(
+                                                                  msg: translator
+                                                                      .translate(
+                                                                          'done'),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .black,
+                                                                  textColor: Colors
+                                                                      .white));
+                                                          _load = false;
+                                                        });
+                                                      },
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                    ),
+                                                    DialogButton(
+                                                      child: Text(
+                                                        translator
+                                                            .translate('edit'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    )
+                                                  ],
+                                                ).show();
                                               }
                                             } else {
                                               Fluttertoast.showToast(
@@ -1633,229 +1765,298 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                   backgroundColor: Colors.black,
                                                   textColor: Colors.white);
                                             } else {
-                                              //send data to branch
-                                              DateTime now = DateTime.now();
-                                              final orderbranchdatabaseReference =
-                                                  FirebaseDatabase.instance
-                                                      .reference()
-                                                      .child(
-                                                          "orderListforBranch")
-                                                      .child(globals.branch_id);
-                                              final orderuserdatabaseReference =
-                                                  FirebaseDatabase.instance
-                                                      .reference()
-                                                      .child("orderListforUser")
-                                                      .child(_userid);
+                                              /////////////  send data to branch //////////////
 
-                                              String orderid =
-                                                  orderbranchdatabaseReference
-                                                      .push()
-                                                      .key;
+                                              Alert(
+                                                onWillPopActive: true,
+                                                context: context,
+                                                type: AlertType.warning,
+                                                title: translator.translate(
+                                                    'confirmationOrder'),
+                                                desc: translator.translate(
+                                                    'desConfirmation'),
+                                                buttons: [
+                                                  DialogButton(
+                                                    child: Text(
+                                                      translator.translate(
+                                                          'confirmation'),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20),
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _load = true;
+                                                        Navigator.pop(context);
+                                                      });
 
-                                              final ReferenceOrderId =
-                                                  FirebaseDatabase.instance
-                                                      .reference()
-                                                      .child(
-                                                          'OrderIdAndBranchId');
-                                              ReferenceOrderId.child(_userid)
-                                                  .set({
-                                                'OrderId': orderid,
-                                                'BranchId': globals.branch_id,
-                                              });
-                                              final ReferenceStatusOrder =
-                                                  FirebaseDatabase.instance
-                                                      .reference()
-                                                      .child(
-                                                          'NotificationStatusOrder');
-                                              ReferenceStatusOrder.child(
-                                                      _userid)
-                                                  .child(orderid)
-                                                  .update({
-                                                'OrderStatus': 0,
-                                              });
-                                              orderbranchdatabaseReference
-                                                  .child(orderid)
-                                                  .set({
-                                                'carrange': arrange,
-                                                'orderId': orderid,
-                                                'userid': _userid,
-                                                'cdate': now.toString(),
-                                                'NumberPhoneUser': _NumberPhone,
-                                                'Payment': _character ==
-                                                        SingingCharacter.cash
-                                                    ? 'Cash'
-                                                    : 'ATM',
-                                                'branch_id': globals.branch_id,
-                                                'deliverycheck':
-                                                    globals.deliverycheck,
-                                                'lat_gps': globals.lat_gps,
-                                                'long_gps': globals.long_gps,
-                                                'address_gps':
-                                                    globals.address_gps,
-                                                'ttprice': globals.deliverycheck
-                                                    ? (globals.distance > 10.0
-                                                        ? (ttprice *
-                                                                    (1 -
-                                                                        discount) +
-                                                                20)
-                                                            .toStringAsFixed(1)
-                                                        : (ttprice *
-                                                                    (1 -
-                                                                        discount) +
-                                                                10)
-                                                            .toStringAsFixed(1))
-                                                    : (ttprice *
-                                                                (1 - discount) +
-                                                            0)
-                                                        .toStringAsFixed(1),
-                                                'ttitems': ttitems,
-                                                'item_id_list':
-                                                    orderforbill.item_id,
-                                                'title_ar_list':
-                                                    orderforbill.title_ar,
-                                                'title_en_list':
-                                                    orderforbill.title_en,
-                                                'total_price_list':
-                                                    orderforbill.total_price,
-                                                'item_no_list':
-                                                    orderforbill.item_no,
-                                                'size_list': orderforbill.size,
-                                                'url_list': orderforbill.url,
-                                                'deliverytime': deliverytime,
-                                              }).whenComplete(() async {
-                                                orderuserdatabaseReference
-                                                    .child(orderid)
-                                                    .set({
-                                                      'carrange': arrange,
-                                                      'orderId': orderid,
-                                                      'userid': _userid,
-                                                      'cdate': now.toString(),
-                                                      'NumberPhoneUser':
-                                                          _NumberPhone,
-                                                      'Payment': _character ==
-                                                              SingingCharacter
-                                                                  .cash
-                                                          ? 'Cash'
-                                                          : 'ATM',
-                                                      'branch_id':
-                                                          globals.branch_id,
-                                                      'deliverycheck':
-                                                          globals.deliverycheck,
-                                                      'lat_gps':
-                                                          globals.lat_gps,
-                                                      'long_gps':
-                                                          globals.long_gps,
-                                                      'address_gps':
-                                                          globals.address_gps,
-                                                      'ttprice': globals
-                                                              .deliverycheck
-                                                          ? (globals.distance >
-                                                                  10.0
-                                                              ? (ttprice *
-                                                                          (1 -
-                                                                              discount) +
-                                                                      20)
-                                                                  .toStringAsFixed(
-                                                                      1)
-                                                              : (ttprice *
-                                                                          (1 -
-                                                                              discount) +
-                                                                      10)
-                                                                  .toStringAsFixed(
-                                                                      1))
-                                                          : (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  0)
-                                                              .toStringAsFixed(
-                                                                  1),
-                                                      'ttitems': ttitems,
-                                                      'item_id_list':
-                                                          orderforbill.item_id,
-                                                      'title_ar_list':
-                                                          orderforbill.title_ar,
-                                                      'title_en_list':
-                                                          orderforbill.title_en,
-                                                      'total_price_list':
-                                                          orderforbill
-                                                              .total_price,
-                                                      'item_no_list':
-                                                          orderforbill.item_no,
-                                                      'size_list':
-                                                          orderforbill.size,
-                                                      'url_list':
-                                                          orderforbill.url,
-                                                      'deliverytime':
-                                                          deliverytime,
-                                                    })
-                                                    .whenComplete(() =>
-                                                        Fluttertoast.showToast(
-                                                            msg: translator
-                                                                .translate(
-                                                                    'done'),
-                                                            backgroundColor:
-                                                                Colors.black,
-                                                            textColor:
-                                                                Colors.white))
-                                                    .then((value) => Alert(
-                                                          onWillPopActive: true,
-                                                          context: context,
-                                                          type:
-                                                              AlertType.success,
-                                                          title: translator
-                                                              .translate(
-                                                                  'done'),
-                                                          desc: translator
-                                                              .translate(
-                                                                  'OrderTracking'),
-                                                          buttons: [
-                                                            DialogButton(
-                                                              child: Text(
-                                                                translator
+                                                      DateTime now =
+                                                          DateTime.now();
+                                                      final orderbranchdatabaseReference =
+                                                          FirebaseDatabase
+                                                              .instance
+                                                              .reference()
+                                                              .child(
+                                                                  "orderListforBranch")
+                                                              .child(globals
+                                                                  .branch_id);
+                                                      final orderuserdatabaseReference =
+                                                          FirebaseDatabase
+                                                              .instance
+                                                              .reference()
+                                                              .child(
+                                                                  "orderListforUser")
+                                                              .child(_userid);
+
+                                                      String orderid =
+                                                          orderbranchdatabaseReference
+                                                              .push()
+                                                              .key;
+
+                                                      final ReferenceOrderId =
+                                                          FirebaseDatabase
+                                                              .instance
+                                                              .reference()
+                                                              .child(
+                                                                  'OrderIdAndBranchId');
+                                                      ReferenceOrderId.child(
+                                                              _userid)
+                                                          .set({
+                                                        'OrderId': orderid,
+                                                        'BranchId':
+                                                            globals.branch_id,
+                                                      });
+                                                      final ReferenceStatusOrder =
+                                                          FirebaseDatabase
+                                                              .instance
+                                                              .reference()
+                                                              .child(
+                                                                  'NotificationStatusOrder');
+                                                      ReferenceStatusOrder
+                                                              .child(_userid)
+                                                          .child(orderid)
+                                                          .update({
+                                                        'OrderStatus': 0,
+                                                      });
+                                                      orderbranchdatabaseReference
+                                                          .child(orderid)
+                                                          .set({
+                                                        'carrange': arrange,
+                                                        'orderId': orderid,
+                                                        'userid': _userid,
+                                                        'cdate': now.toString(),
+                                                        'NumberPhoneUser':
+                                                            _NumberPhone,
+                                                        'Payment': _character ==
+                                                                SingingCharacter
+                                                                    .cash
+                                                            ? 'Cash'
+                                                            : 'ATM',
+                                                        'branch_id':
+                                                            globals.branch_id,
+                                                        'deliverycheck': globals
+                                                            .deliverycheck,
+                                                        'lat_gps':
+                                                            globals.lat_gps,
+                                                        'long_gps':
+                                                            globals.long_gps,
+                                                        'address_gps':
+                                                            globals.address_gps,
+                                                        'ttprice': globals
+                                                                .deliverycheck
+                                                            ? (globals.distance >
+                                                                    10.0
+                                                                ? (ttprice *
+                                                                            (1 -
+                                                                                discount) +
+                                                                        20)
+                                                                    .toStringAsFixed(
+                                                                        1)
+                                                                : (ttprice *
+                                                                            (1 -
+                                                                                discount) +
+                                                                        10)
+                                                                    .toStringAsFixed(
+                                                                        1))
+                                                            : (ttprice *
+                                                                        (1 -
+                                                                            discount) +
+                                                                    0)
+                                                                .toStringAsFixed(
+                                                                    1),
+                                                        'ttitems': ttitems,
+                                                        'item_id_list':
+                                                            orderforbill
+                                                                .item_id,
+                                                        'title_ar_list':
+                                                            orderforbill
+                                                                .title_ar,
+                                                        'title_en_list':
+                                                            orderforbill
+                                                                .title_en,
+                                                        'total_price_list':
+                                                            orderforbill
+                                                                .total_price,
+                                                        'item_no_list':
+                                                            orderforbill
+                                                                .item_no,
+                                                        'size_list':
+                                                            orderforbill.size,
+                                                        'url_list':
+                                                            orderforbill.url,
+                                                        'deliverytime':
+                                                            deliverytime,
+                                                      }).whenComplete(() async {
+                                                        orderuserdatabaseReference
+                                                            .child(orderid)
+                                                            .set({
+                                                              'carrange':
+                                                                  arrange,
+                                                              'orderId':
+                                                                  orderid,
+                                                              'userid': _userid,
+                                                              'cdate': now
+                                                                  .toString(),
+                                                              'NumberPhoneUser':
+                                                                  _NumberPhone,
+                                                              'Payment': _character ==
+                                                                      SingingCharacter
+                                                                          .cash
+                                                                  ? 'Cash'
+                                                                  : 'ATM',
+                                                              'branch_id':
+                                                                  globals
+                                                                      .branch_id,
+                                                              'deliverycheck':
+                                                                  globals
+                                                                      .deliverycheck,
+                                                              'lat_gps': globals
+                                                                  .lat_gps,
+                                                              'long_gps':
+                                                                  globals
+                                                                      .long_gps,
+                                                              'address_gps':
+                                                                  globals
+                                                                      .address_gps,
+                                                              'ttprice': globals
+                                                                      .deliverycheck
+                                                                  ? (globals.distance >
+                                                                          10.0
+                                                                      ? (ttprice * (1 - discount) +
+                                                                              20)
+                                                                          .toStringAsFixed(
+                                                                              1)
+                                                                      : (ttprice * (1 - discount) +
+                                                                              10)
+                                                                          .toStringAsFixed(
+                                                                              1))
+                                                                  : (ttprice * (1 - discount) +
+                                                                          0)
+                                                                      .toStringAsFixed(
+                                                                          1),
+                                                              'ttitems':
+                                                                  ttitems,
+                                                              'item_id_list':
+                                                                  orderforbill
+                                                                      .item_id,
+                                                              'title_ar_list':
+                                                                  orderforbill
+                                                                      .title_ar,
+                                                              'title_en_list':
+                                                                  orderforbill
+                                                                      .title_en,
+                                                              'total_price_list':
+                                                                  orderforbill
+                                                                      .total_price,
+                                                              'item_no_list':
+                                                                  orderforbill
+                                                                      .item_no,
+                                                              'size_list':
+                                                                  orderforbill
+                                                                      .size,
+                                                              'url_list':
+                                                                  orderforbill
+                                                                      .url,
+                                                              'deliverytime':
+                                                                  deliverytime,
+                                                            })
+                                                            .whenComplete(() => Fluttertoast.showToast(
+                                                                msg: translator
                                                                     .translate(
-                                                                        'confirmation'),
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20),
-                                                              ),
-                                                              onPressed: () => Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              StepperPage())),
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .accentColor,
-                                                            ),
-                                                            DialogButton(
-                                                              child: Text(
-                                                                translator
-                                                                    .translate(
-                                                                        'home'),
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20),
-                                                              ),
-                                                              onPressed: () => Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              HomePage())),
-                                                              color:
-                                                                  Colors.black,
-                                                            )
-                                                          ],
-                                                        ).show());
-                                                await _showNotificationCustomSound(
-                                                    ttitems, amount);
-                                                _load = false;
-                                              });
+                                                                        'done'),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white))
+                                                            .then(
+                                                                (value) =>
+                                                                    Alert(
+                                                                      onWillPopActive:
+                                                                          true,
+                                                                      context:
+                                                                          context,
+                                                                      type: AlertType
+                                                                          .success,
+                                                                      title: translator
+                                                                          .translate(
+                                                                              'done'),
+                                                                      desc: translator
+                                                                          .translate(
+                                                                              'OrderTracking'),
+                                                                      buttons: [
+                                                                        DialogButton(
+                                                                          child:
+                                                                              Text(
+                                                                            translator.translate('confirmation'),
+                                                                            style:
+                                                                                TextStyle(color: Colors.white, fontSize: 20),
+                                                                          ),
+                                                                          onPressed: () => Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => StepperPage())),
+                                                                          color:
+                                                                              Theme.of(context).accentColor,
+                                                                        ),
+                                                                        DialogButton(
+                                                                          child:
+                                                                              Text(
+                                                                            translator.translate('home'),
+                                                                            style:
+                                                                                TextStyle(color: Colors.white, fontSize: 20),
+                                                                          ),
+                                                                          onPressed: () => Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => HomePage())),
+                                                                          color:
+                                                                              Colors.black,
+                                                                        )
+                                                                      ],
+                                                                    ).show());
+                                                        await _showNotificationCustomSound(
+                                                            ttitems, amount);
+                                                        _load = false;
+                                                      });
+                                                    },
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                  ),
+                                                  DialogButton(
+                                                    child: Text(
+                                                      translator
+                                                          .translate('edit'),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20),
+                                                    ),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  )
+                                                ],
+                                              ).show();
                                             }
                                           }
                                         }

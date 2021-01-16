@@ -36,6 +36,7 @@ android {
         applicationId "com.arabdevelopers.friesdip"
         minSdkVersion 16
         targetSdkVersion 30
+        multiDexEnabled true
         versionCode 2
         versionName flutterVersionName
     }

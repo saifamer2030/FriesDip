@@ -9,7 +9,7 @@
     "menu": "القائمة",
     "promos": "العروض",
     "branches": "الفروع",
-    "OrderTracking": "تتبع طلبك",
+    "OrderTracking": "تتبع طلبك؟",
     "help": "مساعدة",
     "account": "الحساب",
     "AddAndCustomize": "إضافة وتخصيص",
@@ -17,6 +17,7 @@
     "connection": "برجاء مراجعة الاتصال بالشبكة",
     "CheckCode": "تحقق من الكود المرسل؟",
     "confirmation": "تأكيد",
+    "confirmationOrder": "تأكيد الطلب",
     "Login": "تسجيل دخول",
     "enterNumber": "برجاء إدخال رقم الجوال",
     "enterName": "برجاء إدخال الاسم",
@@ -161,7 +162,8 @@
     "NoReceipt" : "لم يتم الاستلام",
     "YourRequestHasBeenReceived": "تم إستلام طلبك",
     "TheRequestWasNotReceived" : "لم يتم إستلام الطلب ",
-    "select_size" : "برجاء اختيار الحجم"
+    "select_size" : "برجاء اختيار الحجم",
+    "desConfirmation": "هل انت متآكد من إرسال الطلب للفرع؟"
 
 
 

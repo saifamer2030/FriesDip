@@ -9,7 +9,7 @@
     "menu": "Menu",
     "promos": "Promos",
     "branches": "Branches",
-    "OrderTracking": "Order Tracking",
+    "OrderTracking": "Order Tracking?",
     "help": "Help",
     "account": "Account",
     "AddAndCustomize": "Add and Customize",
@@ -17,6 +17,7 @@
     "connection": "Please see network connection",
     "CheckCode": "Check the sending code?",
     "confirmation": "Confirmation",
+    "confirmationOrder": "Confirmation",
     "Login": "Login",
     "enterNumber": "Please enter the mobile number",
     "enterName": "Please enter the Name",
@@ -162,7 +163,8 @@
     "NoReceipt" : "No Receipt",
     "YourRequestHasBeenReceived": "Your Request Has Been Received",
     "TheRequestWasNotReceived" : "The Request Was Not Received",
-    "select_size" : "Please,Select Size"
+    "select_size" : "Please,Select Size",
+    "desConfirmation": "Are you sure of sending the request to the branch?"
 
 
 
