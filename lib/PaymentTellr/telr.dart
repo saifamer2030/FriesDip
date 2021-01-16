@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:friesdip/PaymentTellr/Name.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
+import 'package:friesdip/ScreenPage/paymentCheckOut/my_strings.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xml/xml.dart';
-import 'package:xml/xml.dart' as xml;
 import 'package:xml2json/xml2json.dart';
+import 'dart:io' show Platform;
+
 
 import 'Address.dart';
 class Telr {
@@ -24,7 +25,7 @@ class Telr {
   TransactionRequest() {
     initPlatformState( );
   }
-  Future<String> create(double price, FirebaseUser user, Address address, Name name,String NumberPhone) async {
+  Future<String> create(int price, FirebaseUser user, Address  address,var arrange) async {
     Map<String, dynamic> deviceInfo = await initPlatformState( );
     final request = XmlBuilder( );
     request.processing( 'xml', 'version="1.0"' );
@@ -48,6 +49,7 @@ class Telr {
         request.element( 'id', nest: deviceInfo['AppID'] );
       } );
       // Transaction info section
+
       request.element( 'tran', nest: () {
         // Test mode type, 0 for live mode, 1 for test mode
         request.element( 'test', nest: 0 );
@@ -60,7 +62,9 @@ class Telr {
           request.element( 'cartid', nest: user.uid );
         } else {
           request.element( 'cartid', nest: 14778523690 );
+          request.element( 'cartid', nest: arrange.toString() );
         }
+
         // Transaction description
         request.element( 'description', nest: 'Transaction description' );
         // Transaction currency, like SAR, USD
@@ -84,8 +88,8 @@ class Telr {
         request.element( 'name', nest: () {
           // Name;
           request.element( 'title', nest: 'Mr' );
-          request.element( 'first', nest: name.first );
-          request.element( 'last', nest: name.last );
+        //  request.element( 'first', nest: name.first );
+        //  request.element( 'last', nest: name.last );
         } );
         // Email address
         if (user != null) {
@@ -98,7 +102,7 @@ class Telr {
           request.element( 'line1', nest: address.line1 );
           request.element( 'city', nest: address.city );
           request.element( 'region', nest: address.region );
-          request.element( 'country', nest: address.country );
+          request.element( 'country', nest: 'Saudi Arabia' );
           request.element( 'zip', nest: address.zip );
         } );
       } );
@@ -116,11 +120,9 @@ class Telr {
       'AppID': 'App ID',
       'fingerprint': 'Fingerprint'
     };
-    /*
-    try {
+ /*   try {
       if (Platform.isAndroid) {
-        AndroidDeviceInfo androidDeviceInfo =
-            deviceInfoPlugin.androidInfo as AndroidDeviceInfo;
+        AndroidDeviceInfo androidDeviceInfo = deviceInfoPlugin.androidInfo as AndroidDeviceInfo;
         deviceData = <String, dynamic>{
           'name': androidDeviceInfo.version.codename,
           'type': androidDeviceInfo.type,
@@ -144,27 +146,25 @@ class Telr {
       deviceData = <String, dynamic>{
         'Error:': 'Failed to get platform version.'
       };
-    }
-    */
+    }*/
     return deviceData;
   }
-
   @override
-  Future<PaymentResponse> payForOrder(double price, Address address, Name name, FirebaseUser user,String NumberPhone) async {
+  Future<PaymentResponse> payForOrder(int price, Address address, FirebaseUser user,var arrange) async {
     String body;
-    String payment_id = '147852963';
-    /*
+    String payment_id = '147899';
     if (user != null) {
-      QuerySnapshot querySnapshot = await Firestore.instance
-          .collection('profiles')
-          .where('user_id', isEqualTo: user.uid)
-          .getDocuments();
-      payment_id = querySnapshot.documents[0]['payment_id'].toString();
-    } */
+    //  QuerySnapshot querySnapshot = await Firestore.instance.collection('profiles').where('user_id', isEqualTo: user.uid).getDocuments();
+    //  payment_id = querySnapshot.documents[0]['payment_id'].toString();
+    }
     // test
-    body = await this.create( price, user, address, name, NumberPhone );
+    body = await this.create( price, user, address,arrange);
     print( body.toString( ) );
+
     http.Response response = await http.post( paymentUrl, headers: paymentHeader, body: body );
+    print( response.statusCode );
+    print( response.body );
+
     switch (response.statusCode) {
       case 200:
         Xml2Json xml2json = new Xml2Json( );
@@ -173,8 +173,14 @@ class Telr {
 // the only method that worked for my XML type.
         var response1 = jsonDecode( json );
         String url = (response1['mobile']['webview']['start'].toString( ));
+
         if (await canLaunch( url )) {
-          await launch( url );
+          await launch( url ,
+            forceWebView: true,
+            enableJavaScript: true,
+            enableDomStorage: true,
+          );
+
         } else {
           throw 'Could not launch $url';
         }

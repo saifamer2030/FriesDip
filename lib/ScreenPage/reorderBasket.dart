@@ -14,7 +14,6 @@ import 'package:friesdip/DrawerScreenPage/CustomDrawer.dart';
 import 'package:friesdip/DrawerScreenPage/MenuPage.dart';
 import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
-import 'package:friesdip/PaymentTellr/Name.dart';
 import 'package:friesdip/PaymentTellr/TelrPage.dart';
 import 'package:friesdip/PaymentTellr/payment_card.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
@@ -472,115 +471,173 @@ class _ReorderBasketState extends State<ReorderBasket> {
 
                                             //send data to branch
 
-                                            DateTime now = DateTime.now();
-                                            final orderbranchdatabaseReference =
+
+                                        Alert(
+                                          onWillPopActive: true,
+                                          context: context,
+                                          type: AlertType.warning,
+                                          title: translator.translate(
+                                              'confirmationOrder'),
+                                          desc: translator.translate(
+                                              'desConfirmation'),
+                                          buttons: [
+                                            DialogButton(
+                                              child: Text(
+                                                translator.translate(
+                                                    'confirmation'),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _load = true;
+                                                  Navigator.pop(context);
+                                                });
+
+
+
+
+
+
+
+
+
+
+
+
+                                                DateTime now = DateTime.now();
+                                                final orderbranchdatabaseReference =
                                                 FirebaseDatabase.instance
                                                     .reference()
                                                     .child(
-                                                        "orderListforBranch")
+                                                    "orderListforBranch")
                                                     .child( widget.re_orderList.branch_id);
-                                            final orderuserdatabaseReference =
+                                                final orderuserdatabaseReference =
                                                 FirebaseDatabase.instance
                                                     .reference()
                                                     .child("orderListforuser")
                                                     .child(_userid);
 
-                                            String orderid =
+                                                String orderid =
+                                                    orderbranchdatabaseReference
+                                                        .push()
+                                                        .key;
+
                                                 orderbranchdatabaseReference
-                                                    .push()
-                                                    .key;
-
-                                            orderbranchdatabaseReference
-                                                .child(orderid)
-                                                .set({
-                                              'carrange':
-                                              arrange,
-                                              'orderId': orderid,
-                                              'userid': _userid,
-                                              'cdate': now.toString(),
-                                              'NumberPhoneUser': _NumberPhone,
-                                              'Payment': _character ==
+                                                    .child(orderid)
+                                                    .set({
+                                                  'carrange':
+                                                  arrange,
+                                                  'orderId': orderid,
+                                                  'userid': _userid,
+                                                  'cdate': now.toString(),
+                                                  'NumberPhoneUser': _NumberPhone,
+                                                  'Payment': _character ==
                                                       SingingCharacter.cash
-                                                  ? 'Cash'
-                                                  : 'ATM',
-                                              'branch_id': widget.re_orderList.branch_id,
-                                              'deliverycheck': widget.re_orderList.deliverycheck,
+                                                      ? 'Cash'
+                                                      : 'ATM',
+                                                  'branch_id': widget.re_orderList.branch_id,
+                                                  'deliverycheck': widget.re_orderList.deliverycheck,
 
-                                              'lat_gps':widget.re_orderList.lat_gps,
-                                              'long_gps': widget.re_orderList.long_gps,
-                                              'address_gps':
-                                              widget.re_orderList.address_gps,
-                                              'ttprice': widget.re_orderList.ttprice,
-                                              'ttitems':widget.re_orderList.ttitems,
-                                              'item_id_list':
-                                              widget.re_orderList.item_id_list,
-                                              'title_ar_list':
-                                              widget.re_orderList.title_ar_list,
-                                              'title_en_list':
-                                              widget.re_orderList.title_en_list,
-                                              'total_price_list':
-                                              widget.re_orderList.total_price_list,
-                                              'item_no_list':
-                                              widget.re_orderList.item_no_list,
-                                              'size_list':  widget.re_orderList.size_list,
-                                              'url_list': widget.re_orderList.url_list,
-                                              'deliverytime': deliverytime,
-                                            }).whenComplete(() {
-                                              orderuserdatabaseReference
-                                                  .child(orderid)
-                                                  .set({
-                                                'carrange':
-                                                arrange,
-                                                'orderId': orderid,
-                                                'userid': _userid,
-                                                'cdate': now.toString(),
-                                                'NumberPhoneUser': _NumberPhone,
-                                                'Payment': _character ==
-                                                    SingingCharacter.cash
-                                                    ? 'Cash'
-                                                    : 'ATM',
-                                                'branch_id': widget.re_orderList.branch_id,
-                                                'deliverycheck': widget.re_orderList.deliverycheck,
+                                                  'lat_gps':widget.re_orderList.lat_gps,
+                                                  'long_gps': widget.re_orderList.long_gps,
+                                                  'address_gps':
+                                                  widget.re_orderList.address_gps,
+                                                  'ttprice': widget.re_orderList.ttprice,
+                                                  'ttitems':widget.re_orderList.ttitems,
+                                                  'item_id_list':
+                                                  widget.re_orderList.item_id_list,
+                                                  'title_ar_list':
+                                                  widget.re_orderList.title_ar_list,
+                                                  'title_en_list':
+                                                  widget.re_orderList.title_en_list,
+                                                  'total_price_list':
+                                                  widget.re_orderList.total_price_list,
+                                                  'item_no_list':
+                                                  widget.re_orderList.item_no_list,
+                                                  'size_list':  widget.re_orderList.size_list,
+                                                  'url_list': widget.re_orderList.url_list,
+                                                  'deliverytime': deliverytime,
+                                                }).whenComplete(() {
+                                                  orderuserdatabaseReference
+                                                      .child(orderid)
+                                                      .set({
+                                                    'carrange':
+                                                    arrange,
+                                                    'orderId': orderid,
+                                                    'userid': _userid,
+                                                    'cdate': now.toString(),
+                                                    'NumberPhoneUser': _NumberPhone,
+                                                    'Payment': _character ==
+                                                        SingingCharacter.cash
+                                                        ? 'Cash'
+                                                        : 'ATM',
+                                                    'branch_id': widget.re_orderList.branch_id,
+                                                    'deliverycheck': widget.re_orderList.deliverycheck,
 
-                                                'lat_gps':widget.re_orderList.lat_gps,
-                                                'long_gps': widget.re_orderList.long_gps,
-                                                'address_gps':
-                                                widget.re_orderList.address_gps,
-                                                'ttprice': widget.re_orderList.ttprice,
-                                                'ttitems':widget.re_orderList.ttitems,
-                                                'item_id_list':
-                                                widget.re_orderList.item_id_list,
-                                                'title_ar_list':
-                                                widget.re_orderList.title_ar_list,
-                                                'title_en_list':
-                                                widget.re_orderList.title_en_list,
-                                                'total_price_list':
-                                                widget.re_orderList.total_price_list,
-                                                'item_no_list':
-                                                widget.re_orderList.item_no_list,
-                                                'size_list':  widget.re_orderList.size_list,
-                                                'url_list': widget.re_orderList.url_list,
-                                                'deliverytime': deliverytime,
-                                              }).whenComplete(() =>
+                                                    'lat_gps':widget.re_orderList.lat_gps,
+                                                    'long_gps': widget.re_orderList.long_gps,
+                                                    'address_gps':
+                                                    widget.re_orderList.address_gps,
+                                                    'ttprice': widget.re_orderList.ttprice,
+                                                    'ttitems':widget.re_orderList.ttitems,
+                                                    'item_id_list':
+                                                    widget.re_orderList.item_id_list,
+                                                    'title_ar_list':
+                                                    widget.re_orderList.title_ar_list,
+                                                    'title_en_list':
+                                                    widget.re_orderList.title_en_list,
+                                                    'total_price_list':
+                                                    widget.re_orderList.total_price_list,
+                                                    'item_no_list':
+                                                    widget.re_orderList.item_no_list,
+                                                    'size_list':  widget.re_orderList.size_list,
+                                                    'url_list': widget.re_orderList.url_list,
+                                                    'deliverytime': deliverytime,
+                                                  }).whenComplete(() =>
                                                       Fluttertoast.showToast(
                                                           msg: translator
                                                               .translate(
-                                                                  'done'),
+                                                              'done'),
                                                           backgroundColor:
-                                                              Colors.black,
+                                                          Colors.black,
                                                           textColor:
-                                                              Colors.white));
-                                              _load = false;
-                                            });
-                                     //     }
+                                                          Colors.white));
+                                                  _load = false;
+                                                });
+                                                //     }
 
-                                   //   }
-                                   // });
+                                                //   }
+                                                // });
+
+                                              },
+                                              color: Theme.of(context)
+                                                  .accentColor,
+                                            ),
+                                            DialogButton(
+                                              child: Text(
+                                                translator
+                                                    .translate('edit'),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(
+                                                      context),
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            )
+                                          ],
+                                        ).show();
+
                                   });
                                 });
                           //    }
                             }
-                          }}
+                          }
+                          }
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width / 2,

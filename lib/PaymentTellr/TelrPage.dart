@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:friesdip/DrawerScreenPage/CustomAppBar.dart';
-import 'package:friesdip/PaymentTellr/Name.dart';
 import 'package:friesdip/PaymentTellr/payment_card.dart'as PaymentCard;
-import 'package:friesdip/PaymentTellr/payment_controller.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
 
@@ -131,42 +129,7 @@ class _TelrPageState extends State<TelrPage> {
                           setState(() {
                             _loading = true;
                           });
-                         // PaymentCard.PaymentCard _card = PaymentCard.PaymentCard( _cardNumberController.text, _cardExpiryMonth.text, _cardExpiryYear.text,_cardcvv.text);
-                      //    PaymentCard.PaymentCard _card = PaymentCard.PaymentCard('4000 0000 0000 0002', "12", "20", "123");
-                         String NumberPhone = ('300');
-                          Address _address = new Address( 'Street 1 - line 3 - block 5', 'RIYADH', 'SA', 'RIYADH', '11543');
-                          Name _name = new Name('noor', 'ali');
-                          Telr _Telr=new Telr();
-                          try {
 
-                            PaymentResponse response = await _Telr.payForOrder(widget.total, _address, _name, null, NumberPhone);
-                            if (response.status == 'Approved') {
-                            /*  _orderController.createOrder(await _appService.getItems()).then((value) async {
-                                if (value) {
-                                  await _appService.deleteAll();
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => ThankYouPage()));
-                                } else {
-                                  setState(() {
-                                    _hasError = true;
-                                    _loading = false;
-                                    _errorMessage =
-                                        'Order creation error, please contact admin';
-                                  });
-                                }
-                              });
-                              setState(() {
-                                _hasError = false;
-                              });*/
-                            }
-                          } catch (e) {
-                            setState(() {
-                              _loading = false;
-                              _hasError = true;
-                              _errorMessage = 'Error in card, please try again';
-                            });
-                          }
                         }
                       }
                     },
