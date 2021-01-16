@@ -16,7 +16,9 @@ import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
 import 'package:friesdip/PaymentTellr/TelrPage.dart';
 import 'package:friesdip/PaymentTellr/payment_card.dart';
+import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
+import 'package:friesdip/PaymentTellr/thankyou.dart';
 import 'package:friesdip/ScreenPage/HomePage.dart';
 import 'package:friesdip/ScreenPage/map_view.dart';
 import 'package:friesdip/ScreenPage/paymentCheckOut/CreditCardPage.dart';
@@ -413,7 +415,7 @@ class _ReorderBasketState extends State<ReorderBasket> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           print("kkk$deleted$blocked");
                           if(blocked){
                             Fluttertoast.showToast(
@@ -427,7 +429,29 @@ class _ReorderBasketState extends State<ReorderBasket> {
                           if (   _userid != null &&
                               _character == SingingCharacter.onlinpyment) {
 
-
+                            setState(() {
+                              _load = true;
+                            });
+                            Address _address = new Address(
+                                ' s1,s2,sa',
+                                'RIYADH',
+                                'SA',
+                                'RIYADH',
+                                '11543');
+                            Telr _Telr = new Telr();
+                            try {
+                              PaymentResponse response =
+                                  await _Telr.payForOrder(ttprice,
+                                  _address, null, arrange);
+                              if (response.status == 'Approved') {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ThankYouPage()));
+                              }
+                            } catch (e) {
+                              setState(() {});
+                            }
 /*
                             telr _telr = new telr();
                             PaymentCard _card = new PaymentCard(
@@ -441,9 +465,9 @@ class _ReorderBasketState extends State<ReorderBasket> {
                                 '11543');
                             Name _name = new Name('Jonh', 'Smaith');
                             _telr.pay(_price, _card, _address, _name, null);*/
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => TelrPage(  800 )
-                            ));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) => TelrPage(  800 )
+                            // ));
 
 
 
