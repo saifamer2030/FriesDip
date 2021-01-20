@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>172053553403-evqg5pp9nlocuu6ptki149h4nie2s7f0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.172053553403-evqg5pp9nlocuu6ptki149h4nie2s7f0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>172053553403-0v5th9igvhdnksuqf80r0raap3d7ba6p.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAXFfFihgpCMBqGVySi8Aa_lrg--UE3Bk8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>172053553403</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.fooddrink.friesdip</string>
+	<key>PROJECT_ID</key>
+	<string>frisedip-51864</string>
+	<key>STORAGE_BUCKET</key>
+	<string>frisedip-51864.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:172053553403:ios:c038a75285663d64c2d05e</string>
+	<key>DATABASE_URL</key>
+	<string>https://frisedip-51864.firebaseio.com</string>
+</dict>
+</plist>
