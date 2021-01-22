@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/ScreenPage/paymentCheckOut/my_strings.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +19,7 @@ class Telr {
   static String STOREID = "24923";
   static String publicKey = '10cc319bM\$kmvptP#sh7NX#\$';
   static String paymentUrl = "https://secure.innovatepayments.com/gateway/mobile.xml";
+  bool load = false;
   Map<String, String> paymentHeader = {
     'Content-Type': 'text/xml',
     'Authorization': 'Basic ' + publicKey
@@ -149,6 +153,8 @@ class Telr {
     }*/
     return deviceData;
   }
+
+
   @override
   Future<PaymentResponse> payForOrder(int price, Address address, FirebaseUser user,var arrange) async {
     String body;
@@ -176,9 +182,11 @@ class Telr {
 
         if (await canLaunch( url )) {
           await launch( url ,
+
             forceWebView: true,
             enableJavaScript: true,
             enableDomStorage: true,
+
           );
 
         } else {
@@ -190,4 +198,9 @@ class Telr {
         throw Exception( 'Payment failed' );
         break;
     }
-  }}
+
+  }
+
+
+
+}

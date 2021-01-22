@@ -39,14 +39,13 @@ class _BranchesUsersState extends State<BranchesUsers> {
   String _cName;
   final Set<Marker> _markers = {};
 
-
   List<BranchListClass> BranchList = [];
   List<BranchListClass> SearchList = [];
   List<BranchListClass> costantList = [];
   BitmapDescriptor icon;
   var _controller = ScrollController();
-  String selectedbranch_ar="";
-  String selectedbranch_en="";
+  String selectedbranch_ar = "";
+  String selectedbranch_en = "";
 
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
@@ -55,24 +54,23 @@ class _BranchesUsersState extends State<BranchesUsers> {
   var i;
   bool _load2 = false;
   TextEditingController searchcontroller = TextEditingController();
-  void filterSearchResults(String filtter) {
 
+  void filterSearchResults(String filtter) {
     SearchList.clear();
     SearchList.addAll(BranchList);
-    if ((filtter == '') ) {
+    if ((filtter == '')) {
       setState(() {
         BranchList.clear();
         BranchList.addAll(costantList);
       });
       return;
     } else {
-
-
       setState(() {
         List<BranchListClass> ListData = [];
         SearchList.forEach((item) {
-          if (item.address.toString().contains(filtter) ||item.ar_title.toString().contains(filtter)||item.en_title.toString().contains(filtter)
-          ) {
+          if (item.address.toString().contains(filtter) ||
+              item.ar_title.toString().contains(filtter) ||
+              item.en_title.toString().contains(filtter)) {
             ListData.add(item);
           }
         });
@@ -89,9 +87,8 @@ class _BranchesUsersState extends State<BranchesUsers> {
   void initState() {
     super.initState();
     globals.deliverycheck = false;
-    icon =  BitmapDescriptor.defaultMarker;
+    icon = BitmapDescriptor.defaultMarker;
     getData();
-
   }
 
   @override
@@ -121,11 +118,11 @@ class _BranchesUsersState extends State<BranchesUsers> {
                     decoration: BoxDecoration(
                       color: Color.fromARGB(97, 248, 248, 248),
                       border: Border.all(
-                        width: 1,
-                        color: Colors.lightBlue//Theme.of(context).accentColor,
-                      ),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(10)),
+                          width: 1,
+                          color:
+                              Colors.lightBlue //Theme.of(context).accentColor,
+                          ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
 
                     child: Container(
@@ -151,21 +148,20 @@ class _BranchesUsersState extends State<BranchesUsers> {
                                 Icons.search,
                                 color: Colors.black,
                               ),
-                              suffixIcon:
-                              searchcontroller.text.isNotEmpty
+                              suffixIcon: searchcontroller.text.isNotEmpty
                                   ? IconButton(
-                                icon: Icon(Icons.cancel,
-                                    color: Colors.black),
-                                onPressed: () {
-                                  setState(() {
-                                    searchcontroller.clear();
+                                      icon: Icon(Icons.cancel,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        setState(() {
+                                          searchcontroller.clear();
 
-                                    setState(() {
-                                      filterSearchResults('');
-                                    });
-                                  });
-                                },
-                              )
+                                          setState(() {
+                                            filterSearchResults('');
+                                          });
+                                        });
+                                      },
+                                    )
                                   : null,
                               errorStyle: TextStyle(color: Colors.blue),
                               enabled: true,
@@ -173,7 +169,6 @@ class _BranchesUsersState extends State<BranchesUsers> {
                             ),
                           ),
                         )),
-
                   ),
                 ),
                 Card(
@@ -182,7 +177,10 @@ class _BranchesUsersState extends State<BranchesUsers> {
                     padding: EdgeInsets.only(
                         top: 0.0, left: 0.0, right: 0.0, bottom: 0.0),
                     child: ExpansionTile(
-                      title: Container(color:Colors.grey,child: Text(translator.translate('search_map'))),//backgroundColor: Colors.black,
+                      title: Container(
+                          color: Colors.grey,
+                          child: Text(translator.translate('search_map'))),
+                      //backgroundColor: Colors.black,
                       children: <Widget>[
                         _googleMap(context),
                       ],
@@ -192,78 +190,84 @@ class _BranchesUsersState extends State<BranchesUsers> {
                 Flexible(
                   child: isLoaded
                       ? BranchList.length == 0
-                      ? Center(
-                      child: Text(
-                        translator.translate('no_data'),
-                      ))
-                      : listView()
+                          ? Center(
+                              child: Text(
+                              translator.translate('no_data'),
+                            ))
+                          : listView()
                       : Center(
-                    child: SpinKitFadingCircle(
-                      itemBuilder: (_, int index) {
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                              color: index.isEven
-                                  ? Colors.orange
-                                  : Colors.white),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                (selectedbranch_ar==""||selectedbranch_en=="" )? Container(): Container(
-//              width: MediaQuery.of(context).size.width,
-//              height: MediaQuery.of(context).size.height,
-                  color: Colors.white,
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-//                  OutlineButton(
-//                    onPressed: () {
-//                      translator.setNewLanguage(
-//                        context,
-//                        newLanguage:
-//                            translator.currentLanguage == 'ar' ? 'en' : 'ar',
-//                        remember: true,
-//                        restart: true,
-//                      );
-//                    },
-//                    child: Text(translator.translate('buttonTitle')),
-//                  ),
-//                  OutlineButton(
-//                    onPressed: () {
-//                      translator.setNewLanguage(
-//                        context,
-//                        newLanguage:
-//                            translator.currentLanguage == 'ar' ? 'en' : 'ar',
-//                        remember: true,
-//                        restart: true,
-//                      );
-//                    },
-//                    child: Text(translator.translate('buttonTitle')),
-//                  ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20,bottom: 10),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width-10,
-                            height: 50,
-                            child: new RaisedButton(
-                              child: new Text(translator.translate('pickup')),
-                              textColor: Colors.white,
-                              color: Theme.of(context).accentColor,
-                              //BC0C0C
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MenuPage()));
-                              },
-//
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(10.0)),
-                            ),
+                          child: SpinKitFadingCircle(
+                            itemBuilder: (_, int index) {
+                              return DecoratedBox(
+                                decoration: BoxDecoration(
+                                    color: index.isEven
+                                        ? Colors.orange
+                                        : Colors.white),
+                              );
+                            },
                           ),
                         ),
+                ),
+                (selectedbranch_ar == "" || selectedbranch_en == "")
+                    ? Container()
+                    : Container(
+//              width: MediaQuery.of(context).size.width,
+//              height: MediaQuery.of(context).size.height,
+                        color: Colors.white,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+//                  OutlineButton(
+//                    onPressed: () {
+//                      translator.setNewLanguage(
+//                        context,
+//                        newLanguage:
+//                            translator.currentLanguage == 'ar' ? 'en' : 'ar',
+//                        remember: true,
+//                        restart: true,
+//                      );
+//                    },
+//                    child: Text(translator.translate('buttonTitle')),
+//                  ),
+//                  OutlineButton(
+//                    onPressed: () {
+//                      translator.setNewLanguage(
+//                        context,
+//                        newLanguage:
+//                            translator.currentLanguage == 'ar' ? 'en' : 'ar',
+//                        remember: true,
+//                        restart: true,
+//                      );
+//                    },
+//                    child: Text(translator.translate('buttonTitle')),
+//                  ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 10),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 10,
+                                  height: 50,
+                                  child: new RaisedButton(
+                                    child: new Text(
+                                        translator.translate('pickup')),
+                                    textColor: Colors.white,
+                                    color: Theme.of(context).accentColor,
+                                    //BC0C0C
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MenuPage()));
+                                    },
+//
+                                    shape: new RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(10.0)),
+                                  ),
+                                ),
+                              ),
 //                         Padding(
 //                           padding: const EdgeInsets.only(top: 20),
 //                           child: Container(
@@ -282,11 +286,10 @@ class _BranchesUsersState extends State<BranchesUsers> {
 //                             ),
 //                           ),
 //                         ),
-                      ],
-                    ),
-                  ),
-                )
-
+                            ],
+                          ),
+                        ),
+                      )
               ],
             ),
             new Align(
@@ -294,17 +297,14 @@ class _BranchesUsersState extends State<BranchesUsers> {
               alignment: FractionalOffset.center,
             ),
           ],
-        )
-    );
+        ));
   }
 
 ///////////********* Design *****////////////////////////////
 
-
   Widget listView() {
     return Column(
       children: <Widget>[
-
         Expanded(
             child: new ListView.builder(
                 physics: BouncingScrollPhysics(),
@@ -313,71 +313,76 @@ class _BranchesUsersState extends State<BranchesUsers> {
                 itemBuilder: (BuildContext ctxt, int index) {
                   return InkWell(
                     onTap: () {
-                     // setState(() {
-                        setState(() {
-                          if(  BranchList[index].distance<20.0 ){
-                            if(BranchList[index].open){
-                          BranchList[index].saved =   ! BranchList[index].saved;
-                          if (BranchList[index].saved) {
-                            setState(() {
-                              BranchList[index].colorsaved = Colors.grey[300];
-                              BranchList[index].saved = true;
-                              selectedbranch_ar=BranchList[index].ar_title;
-                              selectedbranch_en=BranchList[index].en_title;
+                      // setState(() {
+                      setState(() {
+                        if (BranchList[index].distance < 20.0) {
+                          if (BranchList[index].open) {
+                            BranchList[index].saved = !BranchList[index].saved;
+                            if (BranchList[index].saved) {
+                              setState(() {
+                                BranchList[index].colorsaved = Colors.grey[300];
+                                BranchList[index].saved = true;
+                                selectedbranch_ar = BranchList[index].ar_title;
+                                selectedbranch_en = BranchList[index].en_title;
 
-                              globals.branch_lat = double.parse(BranchList[index].lat);
-                              globals.branch_long = double.parse(BranchList[index].long);
-                              globals.branch_name_ar = selectedbranch_ar;
-                              globals.branch_name_en =selectedbranch_en;
-                              globals.branch_id= BranchList[index].id;
+                                globals.branch_lat =
+                                    double.parse(BranchList[index].lat);
+                                globals.branch_long =
+                                    double.parse(BranchList[index].long);
+                                globals.branch_name_ar = selectedbranch_ar;
+                                globals.branch_name_en = selectedbranch_en;
+                                globals.branch_id = BranchList[index].id;
 
-                                  Fluttertoast.showToast(
-                                  msg:( translator.currentLanguage == 'ar' ? BranchList[index].ar_title: BranchList[index].en_title)+" "+translator.translate('saved')  ,
-                                  backgroundColor: Colors.black,
-                                  textColor: Colors.white);
-
-
-                            });
-                            for (var i = 0; i < BranchList.length; i++) {
-                              if (i != index){
-                                setState(() {
-                                  BranchList[i].colorsaved = Colors.white;
-                                });
-                              }
+                                Fluttertoast.showToast(
+                                    msg: (translator.currentLanguage == 'ar'
+                                            ? BranchList[index].ar_title
+                                            : BranchList[index].en_title) +
+                                        " " +
+                                        translator.translate('saved'),
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white);
+                              });
+                              for (var i = 0; i < BranchList.length; i++) {
+                                if (i != index) {
+                                  setState(() {
+                                    BranchList[i].colorsaved = Colors.white;
+                                  });
+                                }
                                 //print("hhhh$i");
 
+                              }
+                            } else {
+                              setState(() {
+                                BranchList[index].colorsaved = Colors.white;
+                                BranchList[index].saved = false;
+                                selectedbranch_ar = "";
+                                selectedbranch_en = "";
+
+                                globals.branch_lat = 24.774265;
+                                globals.branch_long = 46.738586;
+                                globals.branch_name_ar = selectedbranch_ar;
+                                globals.branch_name_en = selectedbranch_en;
+                                globals.branch_id = BranchList[index].en_title;
+                              });
                             }
                           } else {
-                            setState(() {
-                              BranchList[index].colorsaved= Colors.white;
-                              BranchList[index].saved = false;
-                              selectedbranch_ar="";
-                               selectedbranch_en="";
-
-                              globals.branch_lat = 24.774265;
-                              globals.branch_long = 46.738586;
-                              globals.branch_name_ar = selectedbranch_ar;
-                              globals.branch_name_en =selectedbranch_en;
-                              globals.branch_id= BranchList[index].en_title;
-                            });
-                          }
-                            }else{  Fluttertoast.showToast(
-                                msg:translator.translate('closed')  ,
+                            Fluttertoast.showToast(
+                                msg: translator.translate('closed'),
                                 backgroundColor: Colors.black,
                                 textColor: Colors.white);
-                            }
                           }
-                          else{
-  Fluttertoast.showToast(
-      msg:translator.translate('long_distance_message')  ,
-      backgroundColor: Colors.black,
-      textColor: Colors.white);
-}
-                        });
+                        } else {
+                          Fluttertoast.showToast(
+                              msg:
+                                  translator.translate('long_distance_message'),
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white);
+                        }
+                      });
 
-                        //////////////////////////////
-                        //    print(selectedbranch_ar+"////"+selectedbranch_en);
-                     // });
+                      //////////////////////////////
+                      //    print(selectedbranch_ar+"////"+selectedbranch_en);
+                      // });
                     },
                     child: Card(
                       color: BranchList[index].colorsaved,
@@ -389,7 +394,6 @@ class _BranchesUsersState extends State<BranchesUsers> {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-
                             Text(
                               translator.currentLanguage == 'ar'
                                   ? BranchList[index].ar_title
@@ -403,8 +407,11 @@ class _BranchesUsersState extends State<BranchesUsers> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-
-                                Text(double.parse(BranchList[index].distance.toStringAsFixed(2)).toString(),
+                                Text(
+                                  double.parse(BranchList[index]
+                                          .distance
+                                          .toStringAsFixed(2))
+                                      .toString(),
                                   //BranchList[index].distance.toString(),
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(
@@ -422,7 +429,6 @@ class _BranchesUsersState extends State<BranchesUsers> {
                                     //  color: Colors.grey[500]
                                   ),
                                 ),
-
                               ],
                             ),
                           ],
@@ -432,7 +438,8 @@ class _BranchesUsersState extends State<BranchesUsers> {
                             Text(
                               BranchList[index].address,
                               textDirection: TextDirection.rtl,
-                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               height: 10,
@@ -442,7 +449,9 @@ class _BranchesUsersState extends State<BranchesUsers> {
                                 Icon(
                                   Icons.fiber_manual_record,
                                   size: 25,
-                                  color: Colors.green,
+                                  color: BranchList[index].open
+                                      ? Colors.green
+                                      : Colors.red,
                                 ),
                                 Text(
                                   BranchList[index].open
@@ -452,7 +461,9 @@ class _BranchesUsersState extends State<BranchesUsers> {
                                   style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.green),
+                                      color: BranchList[index].open
+                                          ? Colors.green
+                                          : Colors.red),
                                 ),
                               ],
                             ),
@@ -487,7 +498,6 @@ class _BranchesUsersState extends State<BranchesUsers> {
                         //
                         //   ],
                         // ),
-
                       ),
                     ),
                   );
@@ -495,7 +505,6 @@ class _BranchesUsersState extends State<BranchesUsers> {
       ],
     );
   }
-
 
   void getData() {
     DateTime now = DateTime.now();
@@ -536,10 +545,10 @@ class _BranchesUsersState extends State<BranchesUsers> {
           DATA[individualkey]['lat'],
           DATA[individualkey]['long'],
           DATA[individualkey]['address'],
-          true,0.0,
-            false,
+          true,
+          0.0,
+          false,
           Colors.white,
-
         );
 
         DateTime open1 = DateTime.parse(
@@ -547,22 +556,39 @@ class _BranchesUsersState extends State<BranchesUsers> {
         // 2020-09-23 12:52:44.480093/////"2012-02-27 13:27:00"
         DateTime close1 = DateTime.parse(
             "${now.year}-${b}-${c} ${DATA[individualkey]['endtime']}:00");
-        if (now.isAfter(open1) && now.isBefore(close1)) {
-          open = true;
+
+        if (open1.isBefore(close1)) {
+          if (now.isAfter(open1) && now.isBefore(close1)) {
+            open = true;
+          } else {
+            open = false;
+          }
         } else {
-          open = false;
+          // close1 = close1.add(new Duration(days: 1));
+          DateTime closeinbetween = DateTime.parse(
+              "${now.year}-${b}-${c} 23:59:59");
+          DateTime openinbetween = DateTime.parse(
+              "${now.year}-${b}-${c} 00:00:01");
+          if ((now.isAfter(open1) && now.isBefore(closeinbetween)) ||
+              (now.isAfter(openinbetween) && now.isBefore(close1))) {
+            open = true;
+          } else {
+            open = false;
+          }
         }
+        print("close : $close1");
+        print("open : $open1");
 
         try {
           List<Placemark> p = await Geolocator().placemarkFromCoordinates(
               double.parse(DATA[individualkey]['lat']),
               double.parse(DATA[individualkey]['long']));
 
-////////////***************
-          double lat2=double.parse(DATA[individualkey]['lat']);
-          double  lon2= double.parse(DATA[individualkey]['long']);
-          double lat1=globals.lat_gps;
-          double  lon1= globals.long_gps;
+////////////*****
+          double lat2 = double.parse(DATA[individualkey]['lat']);
+          double lon2 = double.parse(DATA[individualkey]['long']);
+          double lat1 = globals.lat_gps;
+          double lon1 = globals.long_gps;
 
           // print("globals.lat==${globals.lat_gps}");
           // print("globals.long==${globals.long_gps}");
@@ -572,9 +598,9 @@ class _BranchesUsersState extends State<BranchesUsers> {
           var a = 0.5 -
               c((lat2 - lat1) * pi) / 2 +
               c(lat1 * pi) * c(lat2 * pi) * (1 - c((lon2 - lon1) * pi)) / 2;
-          double distance= 12742 * asin(sqrt(a));
+          double distance = 12742 * asin(sqrt(a));
 
-          ////////////***********
+          ////////////*****
           Placemark place = p[0];
           String name = place.name;
           String subLocality = place.subLocality;
@@ -596,33 +622,43 @@ class _BranchesUsersState extends State<BranchesUsers> {
               DATA[individualkey]['long'],
               "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}",
               open,
-                distance,
-                false,
+              distance,
+              false,
               Colors.white,
             ));
             print("bbbb1${DATA[individualkey]['id']}");
-            _onFindCoifAddMarker(DATA[individualkey]['lat'], DATA[individualkey]['long'], DATA[individualkey]['ar_title'], DATA[individualkey]['en_title'],false,distance,DATA[individualkey]['id'],open);
-
-            costantList.add(new BranchListClass(
-                DATA[individualkey]['id'],
-                DATA[individualkey]['ar_title'],
-                DATA[individualkey]['en_title'],
-                DATA[individualkey]['arrange'],
-                Colors.white,
-                false,
-                DATA[individualkey]['starttime'],
-                DATA[individualkey]['endtime'],
+            _onFindCoifAddMarker(
                 DATA[individualkey]['lat'],
                 DATA[individualkey]['long'],
-                "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}",
-                open,
-                distance,
+                DATA[individualkey]['ar_title'],
+                DATA[individualkey]['en_title'],
                 false,
+                distance,
+                DATA[individualkey]['id'],
+                open);
+
+            costantList.add(new BranchListClass(
+              DATA[individualkey]['id'],
+              DATA[individualkey]['ar_title'],
+              DATA[individualkey]['en_title'],
+              DATA[individualkey]['arrange'],
+              Colors.white,
+              false,
+              DATA[individualkey]['starttime'],
+              DATA[individualkey]['endtime'],
+              DATA[individualkey]['lat'],
+              DATA[individualkey]['long'],
+              "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}",
+              open,
+              distance,
+              false,
               Colors.white,
             ));
             setState(() {
-              BranchList.sort((fl1, fl2) => fl1.distance.compareTo(fl2.distance));
-              costantList.sort((fl1, fl2) => fl1.distance.compareTo(fl2.distance));
+              BranchList.sort(
+                  (fl1, fl2) => fl1.distance.compareTo(fl2.distance));
+              costantList
+                  .sort((fl1, fl2) => fl1.distance.compareTo(fl2.distance));
             });
           });
 
@@ -647,29 +683,31 @@ class _BranchesUsersState extends State<BranchesUsers> {
               DATA[individualkey]['address'],
               open,
               0.0,
-                false,
+              false,
               Colors.white,
             ));
             costantList.add(new BranchListClass(
-                DATA[individualkey]['id'],
-                DATA[individualkey]['ar_title'],
-                DATA[individualkey]['en_title'],
-                DATA[individualkey]['arrange'],
-                Colors.white,
-                false,
-                DATA[individualkey]['starttime'],
-                DATA[individualkey]['endtime'],
-                DATA[individualkey]['lat'],
-                DATA[individualkey]['long'],
-                DATA[individualkey]['address'],
-                open,
-                0.0,
-                false,
+              DATA[individualkey]['id'],
+              DATA[individualkey]['ar_title'],
+              DATA[individualkey]['en_title'],
+              DATA[individualkey]['arrange'],
+              Colors.white,
+              false,
+              DATA[individualkey]['starttime'],
+              DATA[individualkey]['endtime'],
+              DATA[individualkey]['lat'],
+              DATA[individualkey]['long'],
+              DATA[individualkey]['address'],
+              open,
+              0.0,
+              false,
               Colors.white,
             ));
             setState(() {
-              costantList.sort((fl1, fl2) => fl2.distance.compareTo(fl1.distance));
-              BranchList.sort((fl1, fl2) => fl2.distance.compareTo(fl1.distance));
+              costantList
+                  .sort((fl1, fl2) => fl2.distance.compareTo(fl1.distance));
+              BranchList.sort(
+                  (fl1, fl2) => fl2.distance.compareTo(fl1.distance));
             });
           });
         }
@@ -682,12 +720,12 @@ class _BranchesUsersState extends State<BranchesUsers> {
 /////////////////////////////////
   Widget _googleMap(BuildContext context) {
     return Container(
-      height:200,// MediaQuery.of(context).size.height,
+      height: 200, // MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition:
-        CameraPosition(target: LatLng(globals.lat_gps,globals.long_gps), zoom: 12),
+        initialCameraPosition: CameraPosition(
+            target: LatLng(globals.lat_gps, globals.long_gps), zoom: 12),
         onMapCreated: (GoogleMapController controller) {
           _mapcontroller.complete(controller);
         },
@@ -696,12 +734,13 @@ class _BranchesUsersState extends State<BranchesUsers> {
     );
   }
 
-  _onFindCoifAddMarker(String lat, String lng, String ar_tit, String en_tit,saved,double dis,String branch_id,bool open) async {
+  _onFindCoifAddMarker(String lat, String lng, String ar_tit, String en_tit,
+      saved, double dis, String branch_id, bool open) async {
     LatLng newLatLng = LatLng(double.parse(lat), double.parse(lng));
 
     // BitmapDescriptor icon ;
     //BitmapDescriptor icon = await BitmapDescriptor.defaultMarker;
-        //  ImageConfiguration(size: Size(116, 116)), 'assets/images/ic_green.png');
+    //  ImageConfiguration(size: Size(116, 116)), 'assets/images/ic_green.png');
     // } else {
     //  icon =  await BitmapDescriptor.fromAsset('assets/images/ic_red.png',);
     //     // }
@@ -712,67 +751,60 @@ class _BranchesUsersState extends State<BranchesUsers> {
       _markers.add(Marker(
           markerId: MarkerId(newLatLng.toString()),
           position: newLatLng,
-          infoWindow: InfoWindow(title:translator.currentLanguage == 'ar' ? ar_tit: en_tit  ,
-                                snippet:translator.translate('press_to_save'),
-
+          infoWindow: InfoWindow(
+              title: translator.currentLanguage == 'ar' ? ar_tit : en_tit,
+              snippet: translator.translate('press_to_save'),
               onTap: () {
-            setState(() {
-      if(dis<20){
-      if(open){
+                setState(() {
+                  if (dis < 20) {
+                    if (open) {
+                      selectedbranch_ar = ar_tit;
+                      selectedbranch_en = en_tit;
 
-      selectedbranch_ar=ar_tit;
-      selectedbranch_en=en_tit;
+                      globals.branch_lat = double.parse(lat);
+                      globals.branch_long = double.parse(lng);
+                      globals.branch_name_ar = selectedbranch_ar;
+                      globals.branch_name_en = selectedbranch_en;
+                      globals.branch_id = branch_id;
 
-      globals.branch_lat =double.parse(lat);
-      globals.branch_long = double.parse(lng);
-      globals.branch_name_ar = selectedbranch_ar;
-      globals.branch_name_en =selectedbranch_en;
-      globals.branch_id= branch_id;
+                      Fluttertoast.showToast(
+                          msg: (translator.currentLanguage == 'ar'
+                                  ? ar_tit
+                                  : en_tit) +
+                              " " +
+                              translator.translate('saved'),
+                          backgroundColor: Colors.black,
+                          textColor: Colors.white);
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: translator.translate('closed'),
+                          backgroundColor: Colors.black,
+                          textColor: Colors.white);
+                    }
+                  } else {
+                    print("bbbb444${ar_tit}");
 
-      Fluttertoast.showToast(
-      msg:( translator.currentLanguage == 'ar' ? ar_tit: en_tit)+" "+translator.translate('saved') ,
-      backgroundColor: Colors.black,
-      textColor: Colors.white);
-      }else{
-        Fluttertoast.showToast(
-      msg:translator.translate('closed')  ,
-      backgroundColor: Colors.black,
-      textColor: Colors.white);
-      }
-      }else{
-        print("bbbb444${ar_tit}");
+                    selectedbranch_ar = "";
+                    selectedbranch_en = "";
 
-        selectedbranch_ar="";
-        selectedbranch_en="";
+                    globals.branch_lat = 24.774265;
+                    globals.branch_long = 46.738586;
+                    globals.branch_name_ar = selectedbranch_ar;
+                    globals.branch_name_en = selectedbranch_en;
+                    globals.branch_id = "";
 
-              globals.branch_lat = 24.774265;
-              globals.branch_long = 46.738586;
-              globals.branch_name_ar = selectedbranch_ar;
-              globals.branch_name_en =selectedbranch_en;
-        globals.branch_id=  "";
-
-        Fluttertoast.showToast(
-            msg:translator.translate('long_distance_message')  ,
-            backgroundColor: Colors.black,
-            textColor: Colors.white);
-      }
-          //    print(selectedbranch_ar+"////"+selectedbranch_en);
-            });
-
-              }
-          ),
+                    Fluttertoast.showToast(
+                        msg: translator.translate('long_distance_message'),
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white);
+                  }
+                  //    print(selectedbranch_ar+"////"+selectedbranch_en);
+                });
+              }),
           icon: icon,
           // BitmapDescriptor.defaultMarkerWithHue(
           //     BitmapDescriptor.hueViolet),
-          onTap: () {
-
-
-          }
-      ));
+          onTap: () {}));
     });
   }
-
-
-
 }
-
