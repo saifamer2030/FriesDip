@@ -1436,9 +1436,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                     .toStringAsFixed(0);
 
                             if (count != 0 &&
-/*
                                 _userid != null &&
-*/
                                 _character == SingingCharacter.onlinpyment) {
                               setState(() {
                                 Future.delayed(Duration(seconds: 0), () async {
@@ -1458,7 +1456,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         print(amount);
                                       });
                                       Address _address = new Address(
-                                          ' s1,s2,sa',
+                                          globals.address_gps,
                                           'RIYADH',
                                           'SA',
                                           'RIYADH',

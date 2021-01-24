@@ -66,7 +66,7 @@ class Telr {
           request.element( 'cartid', nest: user.uid );
         } else {
           request.element( 'cartid', nest: 14778523690 );
-          request.element( 'cartid', nest: arrange.toString() );
+          request.element( 'cartid', nest: arrange );
         }
 
         // Transaction description

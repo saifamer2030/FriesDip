@@ -441,7 +441,7 @@ class _ReorderBasketState extends State<ReorderBasket> {
                             Telr _Telr = new Telr();
                             try {
                               PaymentResponse response =
-                                  await _Telr.payForOrder(ttprice,
+                                  await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice),
                                   _address, null, arrange);
                               if (response.status == 'Approved') {
 
