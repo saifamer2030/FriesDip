@@ -9,15 +9,14 @@ import 'package:friesdip/Classes/OrderItem.dart';
 import 'package:friesdip/Classes/OrderItemforBill.dart';
 import 'package:friesdip/Classes/database_helper.dart';
 import 'package:friesdip/DrawerScreenPage/CustomAppBar.dart';
-import 'package:friesdip/DrawerScreenPage/CustomDrawer.dart';
 import 'package:friesdip/DrawerScreenPage/MenuPage.dart';
 import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
-import 'package:friesdip/PaymentTellr/thankyou.dart';
 import 'package:friesdip/ScreenPage/HomePage.dart';
 import 'package:friesdip/ScreenPage/map_view.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gradual_stepper/gradual_stepper.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -51,6 +50,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   bool deleted = false;
   double discount = 0.0;
   TextEditingController _discountController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  String  _cEmail ;
   String promo_title_ar;
   String promo_title_en;
   int promo_percentage;
@@ -68,6 +69,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   int ttitems = 0;
   double tax = 1.0;
   bool _load = false;
+  var _formKey = GlobalKey<FormState>();
+  Position _geoPosition;
 
   void updateListView() {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
@@ -1395,6 +1398,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                               onChanged: (SingingCharacter value) {
                                 setState(() {
                                   _character = value;
+                                  _cEmail= showAlertDialogemail( context,_cEmail);
+
                                 });
                               },
                             ),
@@ -1418,7 +1423,6 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          print(globals.address_gps);
 
                           if (blocked) {
                             Fluttertoast.showToast(
@@ -1436,7 +1440,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                     .toStringAsFixed(0);
 
                             if (count != 0 &&
-                                _userid != null &&
+                               // _userid != null &&
                                 _character == SingingCharacter.onlinpyment) {
                               setState(() {
                                 Future.delayed(Duration(seconds: 0), () async {
@@ -1455,20 +1459,40 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         _load = true;
                                         print(amount);
                                       });
+                                     // _getCurrentLocation();
+                                      var string =  globals.address_gps;
+                                      List splitedText = string.split(",");
+                                      print(splitedText[2]);
+                                      print(splitedText[3]);
+                                      print(splitedText[4]);
+                                      DateTime now = DateTime.now();
+                                      String b = now.month.toString();
+                                      if (b.length < 2) {
+                                        b = "0" + b;
+                                      }
+                                      String c = now.day.toString();
+                                      if (c.length < 2) {
+                                        c = "0" + c;
+                                      }
+                                      String d = now.hour.toString();
+                                      if (d.length < 2) {
+                                        d = "0" + d;
+                                      }
+                                      String e = now.minute.toString();
+                                      if (e.length < 2) {
+                                        e = "0" + e;
+                                      }
+                                      int arrangedata = int.parse('${now.year}${b}${c}${d}${e}');
+                                      print(_cEmail);
                                       Address _address = new Address(
-                                          globals.address_gps,
-                                          'RIYADH',
+                                        string,
+                                        splitedText[2] ,
                                           'SA',
-                                          'RIYADH',
-                                          '11543');
+                                        splitedText[3] ,
+                                        splitedText[4] ,
+                                        );
                                       Telr _Telr = new Telr();
-                                      try {
-                                        PaymentResponse response =
-                                            await _Telr.payForOrder(
-                                                int.parse(amount),
-                                                _address,
-                                                null,
-                                                arrange);
+                                      try {PaymentResponse response = await _Telr.payForOrder( int.parse(amount), _address, null, arrangedata,_cEmail);
                                         if (response.status == 'Approved') {
                                           DateTime now = DateTime.now();
                                           final orderbranchdatabaseReference =
@@ -1683,12 +1707,10 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                 });
                               });
                             } else {
+
                               if (_userid == null || deleted) {
                                 FirebaseAuth.instance.signOut();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignIn()));
+                                Navigator.push( context, MaterialPageRoute( builder: (context) => SignIn()));
                               } else {
                                 if (count == 0) {
                                   Fluttertoast.showToast(
@@ -2335,5 +2357,81 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
         '$ttitemsطلب/تكلفة طلبك:$amount SAR/وقت الاستلام:$deliverytime',
         platform,
         payload: 'Welcome to the Local Notification demo');
+  }
+
+  showAlertDialogemail(BuildContext context, email) {
+    emailController = TextEditingController(text: email);
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "إلغاء",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "حفظ",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        setState(() {
+          if (_formKey.currentState.validate())
+         // {Firestore.instance.collection('users').document(_userId).updateData({"email": emailController.text,}).then((_) {
+              setState(() {
+                _cEmail = emailController.text;
+                Navigator.of(context).pop();
+              });
+          //  });
+         // }
+        });
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("ادخل البريد الالكتروني" , textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: TextStyle(fontSize: 14, color: Colors.amberAccent),),
+      content: Form(
+        key: _formKey,
+        child: Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 20),
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: TextFormField(
+                textAlign: TextAlign.right,
+                keyboardType: TextInputType.text,
+                //style: textStyle,
+                //textDirection: TextDirection.rtl,
+                controller: emailController,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'برجاء إدخال البريد الإلكترونى';
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'البريد الإلكترونى',
+                  //hintText: '$name',
+                  //labelStyle: textStyle,
+                  errorStyle: TextStyle(color: Colors.red, fontSize: 15.0),
+                  // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                ),
+              ),
+            )),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:friesdip/PaymentTellr/payment_response.dart';
-import 'package:friesdip/ScreenPage/paymentCheckOut/my_strings.dart';
 import 'package:http/http.dart' as http;
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xml/xml.dart';
 import 'package:xml2json/xml2json.dart';
@@ -29,7 +29,7 @@ class Telr {
   TransactionRequest() {
     initPlatformState( );
   }
-  Future<String> create(int price, FirebaseUser user, Address  address,var arrange) async {
+  Future<String> create(int price, FirebaseUser user, Address  address,int arrange,String _cEmail) async {
     Map<String, dynamic> deviceInfo = await initPlatformState( );
     final request = XmlBuilder( );
     request.processing( 'xml', 'version="1.0"' );
@@ -56,18 +56,15 @@ class Telr {
 
       request.element( 'tran', nest: () {
         // Test mode type, 0 for live mode, 1 for test mode
-        request.element( 'test', nest: 0 );
+        request.element( 'test', nest: 0);
         // Transaction type
         request.element( 'type', nest: 'paypage' );
         // Transaction class
         request.element( 'class', nest: 'ecom' );
         // Transaction cart ID'
-        if (user != null) {
-          request.element( 'cartid', nest: user.uid );
-        } else {
-          request.element( 'cartid', nest: 14778523690 );
+
           request.element( 'cartid', nest: arrange );
-        }
+
 
         // Transaction description
         request.element( 'description', nest: 'Transaction description' );
@@ -93,14 +90,12 @@ class Telr {
           // Name;
           request.element( 'title', nest: 'Mr' );
         //  request.element( 'first', nest: name.first );
-        //  request.element( 'last', nest: name.last );
+         // request.element( 'last', nest: name.last );
         } );
         // Email address
-        if (user != null) {
-          request.element( 'email', nest: user.email );
-        } else {
-          request.element( 'email', nest: 'user@mail.com' );
-        }
+
+          request.element( 'email', nest:_cEmail);
+
         // Address info
         request.element( 'address', nest: () {
           request.element( 'line1', nest: address.line1 );
@@ -156,15 +151,15 @@ class Telr {
 
 
   @override
-  Future<PaymentResponse> payForOrder(int price, Address address, FirebaseUser user,var arrange) async {
+  Future<PaymentResponse> payForOrder(int price, Address address, FirebaseUser user,int arrange,String _cEmail) async {
     String body;
-    String payment_id = '147899';
+    bool _loading = false;
     if (user != null) {
     //  QuerySnapshot querySnapshot = await Firestore.instance.collection('profiles').where('user_id', isEqualTo: user.uid).getDocuments();
     //  payment_id = querySnapshot.documents[0]['payment_id'].toString();
     }
     // test
-    body = await this.create( price, user, address,arrange);
+    body = await this.create( price, user, address,arrange,_cEmail);
     print( body.toString( ) );
 
     http.Response response = await http.post( paymentUrl, headers: paymentHeader, body: body );
@@ -181,18 +176,14 @@ class Telr {
         String url = (response1['mobile']['webview']['start'].toString( ));
 
         if (await canLaunch( url )) {
-          await launch( url ,
-
-            forceWebView: true,
-            enableJavaScript: true,
-            enableDomStorage: true,
-
-          );
-
+          await launch( url , forceSafariVC: true, forceWebView: true, enableJavaScript: true, enableDomStorage: true, );
+          /*if (_status) {
+           // Fluttertoast.showToast( msg: translator.translate("انتظر من فضلك دقائق "), backgroundColor: Colors.black, textColor: Colors.white);
+          }*/
         } else {
           throw 'Could not launch $url';
         }
-        // return PaymentResponse( response1['start'].toString(), data['source']['id'].toString());
+
         break;
       default:
         throw Exception( 'Payment failed' );

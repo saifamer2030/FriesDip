@@ -437,12 +437,10 @@ class _ReorderBasketState extends State<ReorderBasket> {
                                 'RIYADH',
                                 'SA',
                                 'RIYADH',
-                                '11543');
+                              'RIYADH', );
                             Telr _Telr = new Telr();
                             try {
-                              PaymentResponse response =
-                                  await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice),
-                                  _address, null, arrange);
+                              PaymentResponse response = await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice), _address, null, arrange,'_cEmail');
                               if (response.status == 'Approved') {
 
                                 DateTime now = DateTime.now();

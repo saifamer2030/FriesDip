@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:friesdip/DrawerScreenPage/CustomAppBar.dart';
 import 'package:friesdip/PaymentTellr/payment_card.dart'as PaymentCard;
 import 'package:friesdip/PaymentTellr/payment_response.dart';
@@ -19,10 +20,7 @@ class TelrPage extends StatefulWidget {
 }
 
 class _TelrPageState extends State<TelrPage> {
-  TextEditingController _cardNumberController = TextEditingController();
-  TextEditingController _cardExpiryMonth = TextEditingController();
-  TextEditingController _cardExpiryYear = TextEditingController();
-  TextEditingController _cardcvv = TextEditingController();
+   num position = 1 ;
 
   bool _loading = false;
   String _errorMessage = '';
@@ -31,21 +29,52 @@ class _TelrPageState extends State<TelrPage> {
 
   @override
   void dispose() {
-    _cardExpiryMonth.dispose();
-    _cardExpiryYear.dispose();
-    _cardNumberController.dispose();
-    _cardcvv.dispose();
     super.dispose();
   }
+   InAppWebViewController _webViewController;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+   @override
+   Widget build(BuildContext context) {
+     return MaterialApp(
+       home: Scaffold(
+         appBar: AppBar(
+           title: const Text('InAppWebView Example'),
+         ),
+         body: Container(
+             child: Column(children: <Widget>[
+               Expanded(
+                 child:InAppWebView(
+                 //  initialData: InAppWebViewInitialData( data: ),
+                   initialOptions: InAppWebViewGroupOptions(
+                       crossPlatform: InAppWebViewOptions( debuggingEnabled: true, )
+                   ),
+                   onWebViewCreated: (InAppWebViewController controller) {
+                     _webViewController = controller;
+                     _webViewController.addJavaScriptHandler(handlerName:'handlerFoo', callback: (args) {
+                       return {'bar': 'bar_value', 'baz': 'baz_value'};
+                     });
+
+                     _webViewController.addJavaScriptHandler(handlerName: 'handlerFooWithArgs', callback: (args) {
+                       print(args);
+                     });
+                   },
+                   onConsoleMessage: (controller, consoleMessage) {
+                     print(consoleMessage);
+                   },
+                 ),
+               ),
+             ])),
+       ),
+     );
+   }
+
+/*    return Scaffold(
       appBar: BaseAppBar(
         appBar: AppBar(),
       ),
       body: Column(
         children: <Widget>[
+
           Container(
             padding: EdgeInsets.all(16),
             child: Text(
@@ -59,64 +88,23 @@ class _TelrPageState extends State<TelrPage> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                /*  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _cardNumberController,
-                    decoration: InputDecoration(hintText: 'Card Number'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your card number';
-                      }
-                      return null;
-                    },
+                  WebView(
+                    initialUrl: 'https://google.com',
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onPageStarted: (value){setState(() {
+                      position = 1;
+                    });},
+                    onPageFinished: (value){setState(() {
+                      position = 0;
+                    });},
                   ),
-                  SizedBox(
-                    height: 16,
+
+                  Container(
+                    child: Center(
+                        child: CircularProgressIndicator()),
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _cardExpiryMonth,
-                    decoration: InputDecoration(hintText: 'Expiry Month'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your card expiry month';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _cardExpiryYear,
-                    decoration: InputDecoration(hintText: 'Expiry Year'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your card expiry year';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _cardcvv,
-                    decoration: InputDecoration(hintText: 'cvv'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your card cvv';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  _hasError ? Text(_errorMessage) : Container(),*/
-                  SizedBox(
+
+           *//*       SizedBox(
                     height: 24,
                   ),
                   RaisedButton(
@@ -133,13 +121,13 @@ class _TelrPageState extends State<TelrPage> {
                         }
                       }
                     },
-                  ),
+                  ),*//*
                 ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
+    );*/
+
 }

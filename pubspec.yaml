@@ -36,6 +36,7 @@ dependencies:
   firebase_database: ^3.0.4
   toast: ^0.1.5
   shared_preferences: ^0.5.8
+  flutter_inappwebview: ^4.0.0+4
   intl: ^0.16.0
   http: ^0.12.2
   devicelocale: ^0.3.1
