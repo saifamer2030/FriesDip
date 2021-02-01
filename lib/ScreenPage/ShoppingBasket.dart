@@ -1438,6 +1438,47 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                             if (count != 0 &&
                                 _userid != null &&
                                 _character == SingingCharacter.onlinpyment) {
+                              // showGeneralDialog(
+                              //   barrierLabel: "Label",
+                              //   barrierDismissible: true,
+                              //   barrierColor: Colors.black.withOpacity(0.5),
+                              //   transitionDuration: Duration(milliseconds: 700),
+                              //   context: context,
+                              //   pageBuilder: (context, anim1, anim2) {
+                              //     return Align(
+                              //       alignment: Alignment.bottomCenter,
+                              //       child: Container(
+                              //         height: 300,
+                              //         child:
+                              //            Column(
+                              //              children: [
+                              //              RaisedButton(onPressed: null),
+                              //              RaisedButton(onPressed: null),
+                              //              RaisedButton(onPressed: null),
+                              //
+                              //              ],
+                              //            ),
+                              //         margin: EdgeInsets.only(
+                              //             bottom: 50, left: 12, right: 12),
+                              //         decoration: BoxDecoration(
+                              //           color: Colors.white,
+                              //           borderRadius: BorderRadius.circular(40),
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              //   transitionBuilder:
+                              //       (context, anim1, anim2, child) {
+                              //     return SlideTransition(
+                              //       position: Tween(
+                              //               begin: Offset(0, 1),
+                              //               end: Offset(0, 0))
+                              //           .animate(anim1),
+                              //       child: child,
+                              //     );
+                              //   },
+                              // );
+
                               setState(() {
                                 Future.delayed(Duration(seconds: 0), () async {
                                   OrderItemforBill orderforbill1 =
@@ -1455,6 +1496,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         _load = true;
                                         print(amount);
                                       });
+
                                       Address _address = new Address(
                                           globals.address_gps,
                                           'RIYADH',
