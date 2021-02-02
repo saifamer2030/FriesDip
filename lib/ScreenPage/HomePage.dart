@@ -347,7 +347,7 @@ class _HomePageState extends State<HomePage> {
         globals.lat_gps = lt;
         globals.long_gps = lg;
         globals.address_gps =
-            "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
+            "${name}, ${subLocality}, ${locality}, ${administrativeArea},${postalCode}, ${country}";
         //  _currentAddress =
         //   "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
         print("mmm" + lg.toString());

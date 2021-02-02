@@ -9,15 +9,14 @@ import 'package:friesdip/Classes/OrderItem.dart';
 import 'package:friesdip/Classes/OrderItemforBill.dart';
 import 'package:friesdip/Classes/database_helper.dart';
 import 'package:friesdip/DrawerScreenPage/CustomAppBar.dart';
-import 'package:friesdip/DrawerScreenPage/CustomDrawer.dart';
 import 'package:friesdip/DrawerScreenPage/MenuPage.dart';
 import 'package:friesdip/DrawerScreenPage/FollowOrder.dart';
 import 'package:friesdip/PaymentTellr/Address.dart';
 import 'package:friesdip/PaymentTellr/payment_response.dart';
 import 'package:friesdip/PaymentTellr/telr.dart';
-import 'package:friesdip/PaymentTellr/thankyou.dart';
 import 'package:friesdip/ScreenPage/HomePage.dart';
 import 'package:friesdip/ScreenPage/map_view.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:gradual_stepper/gradual_stepper.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -51,6 +50,9 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   bool deleted = false;
   double discount = 0.0;
   TextEditingController _discountController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  String _cEmail;
+
   String promo_title_ar;
   String promo_title_en;
   int promo_percentage;
@@ -68,6 +70,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
   int ttitems = 0;
   double tax = 1.0;
   bool _load = false;
+  var _formKey = GlobalKey<FormState>();
+  Position _geoPosition;
 
   void updateListView() {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
@@ -1395,6 +1399,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                               onChanged: (SingingCharacter value) {
                                 setState(() {
                                   _character = value;
+                                  // _cEmail= showAlertDialogemail( context,_cEmail);
                                 });
                               },
                             ),
@@ -1418,8 +1423,6 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          print(globals.address_gps);
-
                           if (blocked) {
                             Fluttertoast.showToast(
                                 msg: translator.translate("blocked"),
@@ -1434,296 +1437,59 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         .toStringAsFixed(1))
                                 : (ttprice * (1 - discount) + 0)
                                     .toStringAsFixed(0);
-
                             if (count != 0 &&
-                                _userid != null &&
+                                // _userid != null &&
                                 _character == SingingCharacter.onlinpyment) {
-                              // showGeneralDialog(
-                              //   barrierLabel: "Label",
-                              //   barrierDismissible: true,
-                              //   barrierColor: Colors.black.withOpacity(0.5),
-                              //   transitionDuration: Duration(milliseconds: 700),
-                              //   context: context,
-                              //   pageBuilder: (context, anim1, anim2) {
-                              //     return Align(
-                              //       alignment: Alignment.bottomCenter,
-                              //       child: Container(
-                              //         height: 300,
-                              //         child:
-                              //            Column(
-                              //              children: [
-                              //              RaisedButton(onPressed: null),
-                              //              RaisedButton(onPressed: null),
-                              //              RaisedButton(onPressed: null),
-                              //
-                              //              ],
-                              //            ),
-                              //         margin: EdgeInsets.only(
-                              //             bottom: 50, left: 12, right: 12),
-                              //         decoration: BoxDecoration(
-                              //           color: Colors.white,
-                              //           borderRadius: BorderRadius.circular(40),
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              //   transitionBuilder:
-                              //       (context, anim1, anim2, child) {
-                              //     return SlideTransition(
-                              //       position: Tween(
-                              //               begin: Offset(0, 1),
-                              //               end: Offset(0, 0))
-                              //           .animate(anim1),
-                              //       child: child,
-                              //     );
-                              //   },
-                              // );
+                              if (globals.deliverycheck) {
+                                /////////delivery////////////
+                                if (globals.distancecheck) {
+                                  if (globals.address_gps == "" ||
+                                      globals.address_gps == null ||
+                                      globals.branch_id == "" ||
+                                      globals.branch_id == null) {
+                                    Fluttertoast.showToast(
+                                        msg: translator.translate(
+                                            'enter_ur_address'),
+                                        backgroundColor:
+                                        Colors.black,
+                                        textColor: Colors.white);
+                                  } else{
+                                    //send data to branch
+                                    showDialogPayment();
+                                  }
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: translator
+                                          .translate('no_delivery'),
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white);
+                                }
+                              } else {
+                                /////////branch////////////
+                                if (globals.branch_name_ar == "" ||
+                                    globals.branch_name_ar ==
+                                        null ||
+                                    globals.branch_name_en == "" ||
+                                    globals.branch_name_en ==
+                                        null ||
+                                    globals.branch_id == "" ||
+                                    globals.branch_id == null) {
+                                  print(
+                                      "bbbb${globals.branch_name_ar}///${globals.branch_name_en}////${globals.branch_id}");
+                                  Fluttertoast.showToast(
+                                      msg: translator.translate(
+                                          'branch_location'),
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white);
+                                } else {
+                                  //send data to branch
+                                  showDialogPayment();
 
-                              setState(() {
-                                Future.delayed(Duration(seconds: 0), () async {
-                                  OrderItemforBill orderforbill1 =
-                                      await databaseHelper
-                                          .alldatafororder()
-                                          .then((orderforbill) async {
-                                    if (orderforbill.size.contains("5")) {
-                                      Fluttertoast.showToast(
-                                          msg: translator
-                                              .translate('select_size'),
-                                          backgroundColor: Colors.black,
-                                          textColor: Colors.white);
-                                    } else {
-                                      setState(() {
-                                        _load = true;
-                                        print(amount);
-                                      });
+                                }
+                              }
 
-                                      Address _address = new Address(
-                                          globals.address_gps,
-                                          'RIYADH',
-                                          'SA',
-                                          'RIYADH',
-                                          '11543');
-                                      Telr _Telr = new Telr();
-                                      try {
-                                        PaymentResponse response =
-                                            await _Telr.payForOrder(
-                                                int.parse(amount),
-                                                _address,
-                                                null,
-                                                arrange);
-                                        if (response.status == 'Approved') {
-                                          DateTime now = DateTime.now();
-                                          final orderbranchdatabaseReference =
-                                              FirebaseDatabase.instance
-                                                  .reference()
-                                                  .child("orderListforBranch")
-                                                  .child(globals.branch_id);
-                                          final orderuserdatabaseReference =
-                                              FirebaseDatabase.instance
-                                                  .reference()
-                                                  .child("orderListforUser")
-                                                  .child(_userid);
 
-                                          String orderid =
-                                              orderbranchdatabaseReference
-                                                  .push()
-                                                  .key;
 
-                                          final ReferenceOrderId =
-                                              FirebaseDatabase.instance
-                                                  .reference()
-                                                  .child('OrderIdAndBranchId');
-                                          ReferenceOrderId.child(_userid).set({
-                                            'OrderId': orderid,
-                                            'BranchId': globals.branch_id,
-                                          });
-                                          final ReferenceStatusOrder =
-                                              FirebaseDatabase.instance
-                                                  .reference()
-                                                  .child(
-                                                      'NotificationStatusOrder');
-                                          ReferenceStatusOrder.child(_userid)
-                                              .child(orderid)
-                                              .update({
-                                            'OrderStatus': 0,
-                                          });
-                                          orderbranchdatabaseReference
-                                              .child(orderid)
-                                              .set({
-                                            'carrange': arrange,
-                                            'orderId': orderid,
-                                            'userid': _userid,
-                                            'cdate': now.toString(),
-                                            'NumberPhoneUser': _NumberPhone,
-                                            'Payment': _character ==
-                                                    SingingCharacter.cash
-                                                ? 'Cash'
-                                                : 'ATM',
-                                            'branch_id': globals.branch_id,
-                                            'deliverycheck':
-                                                globals.deliverycheck,
-                                            'lat_gps': globals.lat_gps,
-                                            'long_gps': globals.long_gps,
-                                            'address_gps': globals.address_gps,
-                                            'ttprice': globals.deliverycheck
-                                                ? (globals.distance > criticalkm
-                                                    ? (ttprice *
-                                                                (1 - discount) +
-                                                            more)
-                                                        .toStringAsFixed(1)
-                                                    : (ttprice *
-                                                                (1 - discount) +
-                                                            less)
-                                                        .toStringAsFixed(1))
-                                                : (ttprice * (1 - discount) + 0)
-                                                    .toStringAsFixed(1),
-                                            'ttitems': ttitems,
-                                            'item_id_list':
-                                                orderforbill.item_id,
-                                            'title_ar_list':
-                                                orderforbill.title_ar,
-                                            'title_en_list':
-                                                orderforbill.title_en,
-                                            'total_price_list':
-                                                orderforbill.total_price,
-                                            'item_no_list':
-                                                orderforbill.item_no,
-                                            'size_list': orderforbill.size,
-                                            'url_list': orderforbill.url,
-                                            'deliverytime': deliverytime,
-                                          }).whenComplete(() async {
-                                            orderuserdatabaseReference
-                                                .child(orderid)
-                                                .set({
-                                                  'carrange': arrange,
-                                                  'orderId': orderid,
-                                                  'userid': _userid,
-                                                  'cdate': now.toString(),
-                                                  'NumberPhoneUser':
-                                                      _NumberPhone,
-                                                  'Payment': _character ==
-                                                          SingingCharacter.cash
-                                                      ? 'Cash'
-                                                      : 'ATM',
-                                                  'branch_id':
-                                                      globals.branch_id,
-                                                  'deliverycheck':
-                                                      globals.deliverycheck,
-                                                  'lat_gps': globals.lat_gps,
-                                                  'long_gps': globals.long_gps,
-                                                  'address_gps':
-                                                      globals.address_gps,
-                                                  'ttprice': globals
-                                                          .deliverycheck
-                                                      ? (globals.distance >
-                                                              criticalkm
-                                                          ? (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  more)
-                                                              .toStringAsFixed(
-                                                                  1)
-                                                          : (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  less)
-                                                              .toStringAsFixed(
-                                                                  1))
-                                                      : (ttprice *
-                                                                  (1 -
-                                                                      discount) +
-                                                              0)
-                                                          .toStringAsFixed(1),
-                                                  'ttitems': ttitems,
-                                                  'item_id_list':
-                                                      orderforbill.item_id,
-                                                  'title_ar_list':
-                                                      orderforbill.title_ar,
-                                                  'title_en_list':
-                                                      orderforbill.title_en,
-                                                  'total_price_list':
-                                                      orderforbill.total_price,
-                                                  'item_no_list':
-                                                      orderforbill.item_no,
-                                                  'size_list':
-                                                      orderforbill.size,
-                                                  'url_list': orderforbill.url,
-                                                  'deliverytime': deliverytime,
-                                                })
-                                                .whenComplete(() =>
-                                                    Fluttertoast.showToast(
-                                                        msg: translator
-                                                            .translate('done'),
-                                                        backgroundColor:
-                                                            Colors.black,
-                                                        textColor:
-                                                            Colors.white))
-                                                .then((value) => Alert(
-                                                      onWillPopActive: true,
-                                                      context: context,
-                                                      type: AlertType.success,
-                                                      title: translator
-                                                          .translate('done'),
-                                                      desc:
-                                                          translator.translate(
-                                                              'OrderTracking'),
-                                                      buttons: [
-                                                        DialogButton(
-                                                          child: Text(
-                                                            translator.translate(
-                                                                'confirmation'),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 20),
-                                                          ),
-                                                          onPressed: () => Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          StepperPage())),
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
-                                                        ),
-                                                        DialogButton(
-                                                          child: Text(
-                                                            translator
-                                                                .translate(
-                                                                    'home'),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 20),
-                                                          ),
-                                                          onPressed: () => Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          HomePage())),
-                                                          color: Colors.black,
-                                                        )
-                                                      ],
-                                                    ).show());
-                                            await _showNotificationCustomSound(
-                                                ttitems, amount, deliverytime);
-                                            _load = false;
-                                          });
-
-                                          // Navigator.of(context).pushReplacement(
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             ThankYouPage()));
-                                        }
-                                      } catch (e) {
-                                        setState(() {});
-                                      }
-                                    }
-                                  });
-                                });
-                              });
                             } else {
                               if (_userid == null || deleted) {
                                 FirebaseAuth.instance.signOut();
@@ -1739,7 +1505,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                       textColor: Colors.white);
                                 } else {
                                   setState(() {
-                                    _load = true;
+                                    // _load = true;
                                     Future.delayed(Duration(seconds: 0),
                                         () async {
                                       OrderItemforBill orderforbill1 =
@@ -1766,7 +1532,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                     backgroundColor:
                                                         Colors.black,
                                                     textColor: Colors.white);
-                                              } else {
+                                              } else{
                                                 //send data to branch
 
                                                 Alert(
@@ -2377,5 +2143,513 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
         '$ttitemsطلب/تكلفة طلبك:$amount SAR/وقت الاستلام:$deliverytime',
         platform,
         payload: 'Welcome to the Local Notification demo');
+  }
+
+  showAlertDialogemail(BuildContext context, email) {
+    emailController = TextEditingController(text: email);
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "إلغاء",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "حفظ",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        setState(() {
+          if (_formKey.currentState.validate())
+            // {Firestore.instance.collection('users').document(_userId).updateData({"email": emailController.text,}).then((_) {
+            setState(() {
+              _cEmail = emailController.text;
+              Navigator.of(context).pop();
+            });
+          //  });
+          // }
+        });
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "ادخل البريد الالكتروني",
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.right,
+        style: TextStyle(fontSize: 14, color: Colors.amberAccent),
+      ),
+      content: Form(
+        key: _formKey,
+        child: Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 20),
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: TextFormField(
+                textAlign: TextAlign.right,
+                keyboardType: TextInputType.text,
+                //style: textStyle,
+                //textDirection: TextDirection.rtl,
+                controller: emailController,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'برجاء إدخال البريد الإلكترونى';
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'البريد الإلكترونى',
+                  //hintText: '$name',
+                  //labelStyle: textStyle,
+                  errorStyle: TextStyle(color: Colors.red, fontSize: 15.0),
+                  // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                ),
+              ),
+            )),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void showDialogPayment() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  right: -40.0,
+                  top: -40.0,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      child: Icon(Icons.close),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          height: 200,
+                          width: 200,
+                          child: Image.asset(
+                              'assets/images/undraw_online_payments_luau.png'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              icon: new Icon(
+                                Icons.attach_email,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              hintText: translator.translate('EmailAddress'),
+                            ),
+                            controller: emailController,
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return translator.translate('enterEmail');
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 70,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 8.0, left: 8.0),
+                              child: new RaisedButton(
+                                child: new Text(
+                                  translator.translate('ExecuteYourRequest'),
+                                  style: TextStyle(
+                                    fontFamily: 'Estedad-Black',
+                                  ),
+                                ),
+                                textColor: Colors.white,
+                                color: Theme.of(context).accentColor,
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                    setState(() {
+                                      _cEmail = emailController.text;
+                                      Navigator.of(context).pop();
+                                    });
+
+                                    var amount = globals.deliverycheck
+                                        ? (globals.distance > criticalkm
+                                            ? (ttprice * (1 - discount) + more)
+                                                .toStringAsFixed(1)
+                                            : (ttprice * (1 - discount) + less)
+                                                .toStringAsFixed(1))
+                                        : (ttprice * (1 - discount) + 0)
+                                            .toStringAsFixed(0);
+
+                                    setState(() {
+                                      Future.delayed(Duration(seconds: 0),
+                                          () async {
+                                        OrderItemforBill orderforbill1 =
+                                            await databaseHelper
+                                                .alldatafororder()
+                                                .then((orderforbill) async {
+                                          if (orderforbill.size.contains("5")) {
+                                            Fluttertoast.showToast(
+                                                msg: translator
+                                                    .translate('select_size'),
+                                                backgroundColor: Colors.black,
+                                                textColor: Colors.white);
+                                          } else {
+                                            setState(() {
+                                              _load = true;
+                                              print(amount);
+                                            });
+
+                                            // _getCurrentLocation();
+                                            var string = globals.address_gps;
+                                            List splitedText =
+                                                string.split(",");
+                                            print(splitedText[2]);
+                                            print(splitedText[3]);
+                                            print(splitedText[4]);
+                                            DateTime now = DateTime.now();
+                                            String b = now.month.toString();
+                                            if (b.length < 2) {
+                                              b = "0" + b;
+                                            }
+                                            String c = now.day.toString();
+                                            if (c.length < 2) {
+                                              c = "0" + c;
+                                            }
+                                            String d = now.hour.toString();
+                                            if (d.length < 2) {
+                                              d = "0" + d;
+                                            }
+                                            String e = now.minute.toString();
+                                            if (e.length < 2) {
+                                              e = "0" + e;
+                                            }
+                                            int arrangedata = int.parse(
+                                                '${now.year}${b}${c}${d}${e}');
+                                            print(_cEmail);
+                                            Address _address = new Address(
+                                              string,
+                                              splitedText[2],
+                                              'SA',
+                                              splitedText[3],
+                                              splitedText[4],
+                                            );
+                                            Telr _Telr = new Telr();
+                                            try {
+                                              PaymentResponse response =
+                                                  await _Telr.payForOrder(
+                                                      int.parse(amount),
+                                                      _address,
+                                                      null,
+                                                      arrangedata,
+                                                      _cEmail);
+                                              if (response.status ==
+                                                  'Approved') {
+                                                DateTime now = DateTime.now();
+                                                final orderbranchdatabaseReference =
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            "orderListforBranch")
+                                                        .child(
+                                                            globals.branch_id);
+                                                final orderuserdatabaseReference =
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            "orderListforUser")
+                                                        .child(_userid);
+
+                                                String orderid =
+                                                    orderbranchdatabaseReference
+                                                        .push()
+                                                        .key;
+
+                                                final ReferenceOrderId =
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            'OrderIdAndBranchId');
+                                                ReferenceOrderId.child(_userid)
+                                                    .set({
+                                                  'OrderId': orderid,
+                                                  'BranchId': globals.branch_id,
+                                                });
+                                                final ReferenceStatusOrder =
+                                                    FirebaseDatabase.instance
+                                                        .reference()
+                                                        .child(
+                                                            'NotificationStatusOrder');
+                                                ReferenceStatusOrder.child(
+                                                        _userid)
+                                                    .child(orderid)
+                                                    .update({
+                                                  'OrderStatus': 0,
+                                                });
+                                                orderbranchdatabaseReference
+                                                    .child(orderid)
+                                                    .set({
+                                                  'carrange': arrange,
+                                                  'orderId': orderid,
+                                                  'userid': _userid,
+                                                  'cdate': now.toString(),
+                                                  'NumberPhoneUser':
+                                                      _NumberPhone,
+                                                  'Payment': _character ==
+                                                          SingingCharacter.cash
+                                                      ? 'Cash'
+                                                      : 'ATM',
+                                                  'branch_id':
+                                                      globals.branch_id,
+                                                  'deliverycheck':
+                                                      globals.deliverycheck,
+                                                  'lat_gps': globals.lat_gps,
+                                                  'long_gps': globals.long_gps,
+                                                  'address_gps':
+                                                      globals.address_gps,
+                                                  'ttprice': globals
+                                                          .deliverycheck
+                                                      ? (globals.distance >
+                                                              criticalkm
+                                                          ? (ttprice *
+                                                                      (1 -
+                                                                          discount) +
+                                                                  more)
+                                                              .toStringAsFixed(
+                                                                  1)
+                                                          : (ttprice *
+                                                                      (1 -
+                                                                          discount) +
+                                                                  less)
+                                                              .toStringAsFixed(
+                                                                  1))
+                                                      : (ttprice *
+                                                                  (1 -
+                                                                      discount) +
+                                                              0)
+                                                          .toStringAsFixed(1),
+                                                  'ttitems': ttitems,
+                                                  'item_id_list':
+                                                      orderforbill.item_id,
+                                                  'title_ar_list':
+                                                      orderforbill.title_ar,
+                                                  'title_en_list':
+                                                      orderforbill.title_en,
+                                                  'total_price_list':
+                                                      orderforbill.total_price,
+                                                  'item_no_list':
+                                                      orderforbill.item_no,
+                                                  'size_list':
+                                                      orderforbill.size,
+                                                  'url_list': orderforbill.url,
+                                                  'deliverytime': deliverytime,
+                                                }).whenComplete(() async {
+                                                  orderuserdatabaseReference
+                                                      .child(orderid)
+                                                      .set({
+                                                        'carrange': arrange,
+                                                        'orderId': orderid,
+                                                        'userid': _userid,
+                                                        'cdate': now.toString(),
+                                                        'NumberPhoneUser':
+                                                            _NumberPhone,
+                                                        'Payment': _character ==
+                                                                SingingCharacter
+                                                                    .cash
+                                                            ? 'Cash'
+                                                            : 'ATM',
+                                                        'branch_id':
+                                                            globals.branch_id,
+                                                        'deliverycheck': globals
+                                                            .deliverycheck,
+                                                        'lat_gps':
+                                                            globals.lat_gps,
+                                                        'long_gps':
+                                                            globals.long_gps,
+                                                        'address_gps':
+                                                            globals.address_gps,
+                                                        'ttprice': globals
+                                                                .deliverycheck
+                                                            ? (globals.distance >
+                                                                    criticalkm
+                                                                ? (ttprice *
+                                                                            (1 -
+                                                                                discount) +
+                                                                        more)
+                                                                    .toStringAsFixed(
+                                                                        1)
+                                                                : (ttprice *
+                                                                            (1 -
+                                                                                discount) +
+                                                                        less)
+                                                                    .toStringAsFixed(
+                                                                        1))
+                                                            : (ttprice *
+                                                                        (1 -
+                                                                            discount) +
+                                                                    0)
+                                                                .toStringAsFixed(
+                                                                    1),
+                                                        'ttitems': ttitems,
+                                                        'item_id_list':
+                                                            orderforbill
+                                                                .item_id,
+                                                        'title_ar_list':
+                                                            orderforbill
+                                                                .title_ar,
+                                                        'title_en_list':
+                                                            orderforbill
+                                                                .title_en,
+                                                        'total_price_list':
+                                                            orderforbill
+                                                                .total_price,
+                                                        'item_no_list':
+                                                            orderforbill
+                                                                .item_no,
+                                                        'size_list':
+                                                            orderforbill.size,
+                                                        'url_list':
+                                                            orderforbill.url,
+                                                        'deliverytime':
+                                                            deliverytime,
+                                                      })
+                                                      .whenComplete(() =>
+                                                          Fluttertoast.showToast(
+                                                              msg: translator
+                                                                  .translate(
+                                                                      'done'),
+                                                              backgroundColor:
+                                                                  Colors.black,
+                                                              textColor:
+                                                                  Colors.white))
+                                                      .then((value) => Alert(
+                                                            onWillPopActive:
+                                                                true,
+                                                            context: context,
+                                                            type: AlertType
+                                                                .success,
+                                                            title: translator
+                                                                .translate(
+                                                                    'done'),
+                                                            desc: translator
+                                                                .translate(
+                                                                    'OrderTracking'),
+                                                            buttons: [
+                                                              DialogButton(
+                                                                child: Text(
+                                                                  translator
+                                                                      .translate(
+                                                                          'confirmation'),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          20),
+                                                                ),
+                                                                onPressed: () => Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                StepperPage())),
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .accentColor,
+                                                              ),
+                                                              DialogButton(
+                                                                child: Text(
+                                                                  translator
+                                                                      .translate(
+                                                                          'home'),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          20),
+                                                                ),
+                                                                onPressed: () => Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                HomePage())),
+                                                                color: Colors
+                                                                    .black,
+                                                              )
+                                                            ],
+                                                          ).show());
+                                                  await _showNotificationCustomSound(
+                                                      ttitems,
+                                                      amount,
+                                                      deliverytime);
+                                                  _load = false;
+                                                });
+
+                                                // Navigator.of(context).pushReplacement(
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             ThankYouPage()));
+                                              }
+                                            } catch (e) {
+                                              setState(() {});
+                                            }
+                                          }
+                                        });
+                                      });
+                                    });
+                                  }
+                                },
+//
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(10.0)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

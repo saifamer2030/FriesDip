@@ -36,6 +36,7 @@ dependencies:
   firebase_database: ^3.0.4
   toast: ^0.1.5
   shared_preferences: ^0.5.8
+  flutter_inappwebview: ^4.0.0+4
   intl: ^0.16.0
   http: ^0.12.2
   devicelocale: ^0.3.1
@@ -108,6 +109,7 @@ flutter:
     - assets/images/mastercard.png
     - assets/images/notreseved.png
     - assets/images/correct.png
+    - assets/images/undraw_online_payments_luau.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -373,30 +373,30 @@ class _ReorderBasketState extends State<ReorderBasket> {
                               },
                             ),
                           ),
-                          ListTile(
-                            title: Text(
-                              translator.translate('OnlinePayment'),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-//                                          fontFamily: 'Estedad-Black',
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            leading: Icon(
-                              Icons.payment,
-                              color: Colors.green,
-                            ),
-                            trailing: Radio(
-                              value: SingingCharacter.onlinpyment,
-                              groupValue: _character,
-                              onChanged: (SingingCharacter value) {
-                                setState(() {
-                                  _character = value;
-                                });
-                              },
-                            ),
-                          ),
+//                           ListTile(
+//                             title: Text(
+//                               translator.translate('OnlinePayment'),
+//                               style: TextStyle(
+//                                 fontWeight: FontWeight.bold,
+//                                 fontSize: 18,
+// //                                          fontFamily: 'Estedad-Black',
+//                               ),
+//                               textAlign: TextAlign.right,
+//                             ),
+//                             leading: Icon(
+//                               Icons.payment,
+//                               color: Colors.green,
+//                             ),
+//                             trailing: Radio(
+//                               value: SingingCharacter.onlinpyment,
+//                               groupValue: _character,
+//                               onChanged: (SingingCharacter value) {
+//                                 setState(() {
+//                                   _character = value;
+//                                 });
+//                               },
+//                             ),
+//                           ),
                         ],
                       ),
                     ],
@@ -437,12 +437,10 @@ class _ReorderBasketState extends State<ReorderBasket> {
                                 'RIYADH',
                                 'SA',
                                 'RIYADH',
-                                '11543');
+                              'RIYADH', );
                             Telr _Telr = new Telr();
                             try {
-                              PaymentResponse response =
-                                  await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice),
-                                  _address, null, arrange);
+                              PaymentResponse response = await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice), _address, null, arrange,'_cEmail');
                               if (response.status == 'Approved') {
 
                                 DateTime now = DateTime.now();
