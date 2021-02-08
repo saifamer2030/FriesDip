@@ -37,9 +37,6 @@ class _TelrPageState extends State<TelrPage> {
    Widget build(BuildContext context) {
      return MaterialApp(
        home: Scaffold(
-         appBar: AppBar(
-           title: const Text('InAppWebView Example'),
-         ),
          body: Container(
              child: Column(children: <Widget>[
                Expanded(

@@ -440,8 +440,8 @@ class _ReorderBasketState extends State<ReorderBasket> {
                               'RIYADH', );
                             Telr _Telr = new Telr();
                             try {
-                              PaymentResponse response = await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice), _address, null, arrange,'_cEmail');
-                              if (response.status == 'Approved') {
+                              PaymentResponse response = await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice), _address, null, arrange,'_cEmail',context);
+                              if (response.status == 200) {
 
                                 DateTime now = DateTime.now();
                                 final orderbranchdatabaseReference =

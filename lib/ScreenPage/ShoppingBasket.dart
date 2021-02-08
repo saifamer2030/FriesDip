@@ -1437,8 +1437,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         .toStringAsFixed(1))
                                 : (ttprice * (1 - discount) + 0)
                                     .toStringAsFixed(0);
-                            if (count != 0 &&
-                                // _userid != null &&
+                            if (count != 0 && _userid != null &&
                                 _character == SingingCharacter.onlinpyment) {
                               if (globals.deliverycheck) {
                                 /////////delivery////////////
@@ -1448,48 +1447,40 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                       globals.branch_id == "" ||
                                       globals.branch_id == null) {
                                     Fluttertoast.showToast(
-                                        msg: translator.translate(
-                                            'enter_ur_address'),
-                                        backgroundColor:
-                                        Colors.black,
+                                        msg: translator
+                                            .translate('enter_ur_address'),
+                                        backgroundColor: Colors.black,
                                         textColor: Colors.white);
-                                  } else{
+                                  } else {
                                     //send data to branch
                                     showDialogPayment();
-                                  }
+                                 }
                                 } else {
                                   Fluttertoast.showToast(
-                                      msg: translator
-                                          .translate('no_delivery'),
+                                      msg: translator.translate('no_delivery'),
                                       backgroundColor: Colors.black,
                                       textColor: Colors.white);
                                 }
                               } else {
                                 /////////branch////////////
                                 if (globals.branch_name_ar == "" ||
-                                    globals.branch_name_ar ==
-                                        null ||
+                                    globals.branch_name_ar == null ||
                                     globals.branch_name_en == "" ||
-                                    globals.branch_name_en ==
-                                        null ||
+                                    globals.branch_name_en == null ||
                                     globals.branch_id == "" ||
                                     globals.branch_id == null) {
                                   print(
                                       "bbbb${globals.branch_name_ar}///${globals.branch_name_en}////${globals.branch_id}");
                                   Fluttertoast.showToast(
-                                      msg: translator.translate(
-                                          'branch_location'),
+                                      msg: translator
+                                          .translate('branch_location'),
                                       backgroundColor: Colors.black,
                                       textColor: Colors.white);
                                 } else {
                                   //send data to branch
                                   showDialogPayment();
-
                                 }
                               }
-
-
-
                             } else {
                               if (_userid == null || deleted) {
                                 FirebaseAuth.instance.signOut();
@@ -1499,10 +1490,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                         builder: (context) => SignIn()));
                               } else {
                                 if (count == 0) {
-                                  Fluttertoast.showToast(
-                                      msg: translator.translate('no_data'),
-                                      backgroundColor: Colors.black,
-                                      textColor: Colors.white);
+                                  Fluttertoast.showToast( msg: translator.translate('no_data'), backgroundColor: Colors.black, textColor: Colors.white);
                                 } else {
                                   setState(() {
                                     // _load = true;
@@ -1532,7 +1520,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                     backgroundColor:
                                                         Colors.black,
                                                     textColor: Colors.white);
-                                              } else{
+                                              } else {
                                                 //send data to branch
 
                                                 Alert(
@@ -1761,7 +1749,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                   backgroundColor: Colors.black,
                                                   textColor: Colors.white);
                                             }
-                                          } else {
+                                         } else {
                                             /////////branch////////////
                                             if (globals.branch_name_ar == "" ||
                                                 globals.branch_name_ar ==
@@ -2340,9 +2328,6 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                             var string = globals.address_gps;
                                             List splitedText =
                                                 string.split(",");
-                                            print(splitedText[2]);
-                                            print(splitedText[3]);
-                                            print(splitedText[4]);
                                             DateTime now = DateTime.now();
                                             String b = now.month.toString();
                                             if (b.length < 2) {
@@ -2363,6 +2348,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                             int arrangedata = int.parse(
                                                 '${now.year}${b}${c}${d}${e}');
                                             print(_cEmail);
+
                                             Address _address = new Address(
                                               string,
                                               splitedText[2],
@@ -2370,6 +2356,8 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                               splitedText[3],
                                               splitedText[4],
                                             );
+
+                                            // ignore: missing_return
                                             Telr _Telr = new Telr();
                                             try {
                                               PaymentResponse response =
@@ -2378,9 +2366,12 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                       _address,
                                                       null,
                                                       arrangedata,
-                                                      _cEmail);
-                                              if (response.status ==
-                                                  'Approved') {
+                                                      _cEmail,
+                                                      context);
+                                              print(response);
+
+
+                                              if (response.status == 200) {
                                                 DateTime now = DateTime.now();
                                                 final orderbranchdatabaseReference =
                                                     FirebaseDatabase.instance

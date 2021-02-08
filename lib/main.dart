@@ -27,7 +27,6 @@ main() async {
     assetsDirectory: 'assets/langs/',
     apiKeyGoogle: '<Key>', // NOT YET TESTED
   ); // intialize
-
   runApp(LocalizedApp(child: MyApp()));
 }
 
