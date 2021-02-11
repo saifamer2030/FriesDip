@@ -275,7 +275,7 @@ class _telrPageState extends State<telrPage> {
 
   StreamSubscription<WebViewHttpError> _onHttpError;
 
-  StreamSubscription<double> _onProgressChanged;
+//  StreamSubscription<double> _onProgressChanged;
 
   StreamSubscription<double> _onScrollYChanged;
 
@@ -300,8 +300,11 @@ class _telrPageState extends State<telrPage> {
       if (mounted) {
         // close payment and abort
         if (!complete) {
+          print("Destroy...");
           // abort
           telr.abort(code);
+          // close web view
+          flutterWebViewPlugin.close();
         }
       }
     });
@@ -310,6 +313,8 @@ class _telrPageState extends State<telrPage> {
     _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
         setState(() {
+          print("Change url...");
+          print(url);
           // check for url
           if (url == close_url) {
               // payment complete
@@ -317,10 +322,6 @@ class _telrPageState extends State<telrPage> {
               telr.complete(code);
           } else if (url == abort_url) {
               // closed by user
-              complete = false;
-              telr.abort(code);
-          } else {
-              // payment failed for some reason
               complete = false;
               telr.abort(code);
           }
@@ -346,6 +347,8 @@ class _telrPageState extends State<telrPage> {
                 // payment failed
                 complete = false;
                 telr.abort(code);
+                // close web view
+                flutterWebViewPlugin.close();
             });
           }
         });
@@ -358,7 +361,7 @@ class _telrPageState extends State<telrPage> {
     _onUrlChanged.cancel();
     _onStateChanged.cancel();
     _onHttpError.cancel();
-    _onProgressChanged.cancel();
+   // _onProgressChanged.cancel();
     _onScrollXChanged.cancel();
     _onScrollYChanged.cancel();
     flutterWebViewPlugin.dispose();
