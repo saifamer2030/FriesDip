@@ -68,7 +68,7 @@ class Telr {
 
       request.element( 'tran', nest: () {
         // Test mode type, 0 for live mode, 1 for test mode
-        request.element( 'test', nest:1);
+        request.element( 'test', nest:0);
         // Transaction type
         request.element( 'type', nest: 'paypage' );
         // Transaction class

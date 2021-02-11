@@ -1469,8 +1469,21 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                     globals.branch_name_en == null ||
                                     globals.branch_id == "" ||
                                     globals.branch_id == null) {
-                                  print(
-                                      "bbbb${globals.branch_name_ar}///${globals.branch_name_en}////${globals.branch_id}");
+                                  print("bbbb${globals.branch_name_ar}///${globals.branch_name_en}////${globals.branch_id}");
+                                  // final snackBar = SnackBar(
+                                  //   content: Text( translator
+                                  //       .translate('branch_location')),
+                                  //   // action: SnackBarAction(
+                                  //   //   label: 'Undo',
+                                  //   //   onPressed: () {
+                                  //   //     // Some code to undo the change.
+                                  //   //   },
+                                  //   // ),
+                                  // );
+                                  //
+                                  // // Find the Scaffold in the widget tree and use
+                                  // // it to show a SnackBar.
+                                  // Scaffold.of(context).showSnackBar(snackBar);
                                   Fluttertoast.showToast(
                                       msg: translator
                                           .translate('branch_location'),
