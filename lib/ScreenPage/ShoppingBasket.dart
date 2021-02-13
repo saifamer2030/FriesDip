@@ -29,6 +29,9 @@ import 'loginphone.dart';
 class ShoppingBasket extends StatefulWidget {
   @override
   _ShoppingBasketState createState() => _ShoppingBasketState();
+
+  payment(PaymentResponse paymentResponse) =>
+      createState().chickPaymentSucsse(paymentResponse);
 }
 
 enum SingingCharacter { cash, atm, onlinpyment }
@@ -1460,6 +1463,21 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                     'enter_ur_address'),
                                                 backgroundColor: Colors.black,
                                                 textColor: Colors.white);
+                                          }
+
+                                          if (globals.branch_name_ar == "" ||
+                                              globals.branch_name_ar == null ||
+                                              globals.branch_name_en == "" ||
+                                              globals.branch_name_en == null ||
+                                              globals.branch_id == "" ||
+                                              globals.branch_id == null) {
+                                            print(
+                                                "bbbb${globals.branch_name_ar}///${globals.branch_name_en}////${globals.branch_id}");
+                                            Fluttertoast.showToast(
+                                                msg: translator.translate(
+                                                    'branch_location'),
+                                                backgroundColor: Colors.black,
+                                                textColor: Colors.white);
                                           } else {
                                             //send data to branch
                                             if (orderforbill.size
@@ -1508,9 +1526,20 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                 splitedText[3],
                                                 splitedText[4],
                                               );
-                                              Telr _Telr = new Telr();
+                                              Telr _Telr = new Telr(
+                                                  _NumberPhone,
+                                                  _userid,
+                                                  deliverytime,
+                                                  criticalkm,
+                                                  ttprice,
+                                                  discount,
+                                                  more,
+                                                  less,
+                                                  arrange,
+                                                  ttitems,
+                                                  context);
                                               try {
-                                                PaymentResponse response =
+                                                dynamic response =
                                                     await _Telr.payForOrder(
                                                         int.parse(amount),
                                                         _address,
@@ -1518,258 +1547,258 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                         arrangedata,
                                                         _cEmail,
                                                         context);
-                                                print(
-                                                    'Response status: ${response.status}');
-                                                if (response.status == 200) {
-                                                  // Approved
-                                                  print(
-                                                      'Response status: ${response.status}');
-                                                  DateTime now = DateTime.now();
-                                                  final orderbranchdatabaseReference =
-                                                      FirebaseDatabase.instance
-                                                          .reference()
-                                                          .child(
-                                                              "orderListforBranch")
-                                                          .child(globals
-                                                              .branch_id);
-                                                  final orderuserdatabaseReference =
-                                                      FirebaseDatabase.instance
-                                                          .reference()
-                                                          .child(
-                                                              "orderListforUser")
-                                                          .child(_userid);
-                                                  String orderid =
-                                                      orderbranchdatabaseReference
-                                                          .push()
-                                                          .key;
-                                                  final ReferenceOrderId =
-                                                      FirebaseDatabase.instance
-                                                          .reference()
-                                                          .child(
-                                                              'OrderIdAndBranchId');
-                                                  ReferenceOrderId.child(
-                                                          _userid)
-                                                      .set({
-                                                    'OrderId': orderid,
-                                                    'BranchId':
-                                                        globals.branch_id,
-                                                  });
-                                                  final ReferenceStatusOrder =
-                                                      FirebaseDatabase.instance
-                                                          .reference()
-                                                          .child(
-                                                              'NotificationStatusOrder');
-                                                  ReferenceStatusOrder.child(
-                                                          _userid)
-                                                      .child(orderid)
-                                                      .update({
-                                                    'OrderStatus': 0,
-                                                  });
-                                                  orderbranchdatabaseReference
-                                                      .child(orderid)
-                                                      .set({
-                                                    'carrange': arrange,
-                                                    'orderId': orderid,
-                                                    'userid': _userid,
-                                                    'cdate': now.toString(),
-                                                    'NumberPhoneUser':
-                                                        _NumberPhone,
-                                                    'Payment': 'online payment',
-                                                    'branch_id':
-                                                        globals.branch_id,
-                                                    'deliverycheck':
-                                                        globals.deliverycheck,
-                                                    'lat_gps': globals.lat_gps,
-                                                    'long_gps':
-                                                        globals.long_gps,
-                                                    'address_gps':
-                                                        globals.address_gps,
-                                                    'ttprice': globals
-                                                            .deliverycheck
-                                                        ? (globals.distance >
-                                                                criticalkm
-                                                            ? (ttprice *
-                                                                        (1 -
-                                                                            discount) +
-                                                                    more)
-                                                                .toStringAsFixed(
-                                                                    1)
-                                                            : (ttprice *
-                                                                        (1 -
-                                                                            discount) +
-                                                                    less)
-                                                                .toStringAsFixed(
-                                                                    1))
-                                                        : (ttprice *
-                                                                    (1 -
-                                                                        discount) +
-                                                                0)
-                                                            .toStringAsFixed(1),
-                                                    'ttitems': ttitems,
-                                                    'item_id_list':
-                                                        orderforbill.item_id,
-                                                    'title_ar_list':
-                                                        orderforbill.title_ar,
-                                                    'title_en_list':
-                                                        orderforbill.title_en,
-                                                    'total_price_list':
-                                                        orderforbill
-                                                            .total_price,
-                                                    'item_no_list':
-                                                        orderforbill.item_no,
-                                                    'size_list':
-                                                        orderforbill.size,
-                                                    'url_list':
-                                                        orderforbill.url,
-                                                    'deliverytime':
-                                                        deliverytime,
-                                                  }).whenComplete(() async {
-                                                    orderuserdatabaseReference
-                                                        .child(orderid)
-                                                        .set({
-                                                          'carrange': arrange,
-                                                          'orderId': orderid,
-                                                          'userid': _userid,
-                                                          'cdate':
-                                                              now.toString(),
-                                                          'NumberPhoneUser':
-                                                              _NumberPhone,
-                                                          'Payment':
-                                                              'online payment',
-                                                          'branch_id':
-                                                              globals.branch_id,
-                                                          'deliverycheck':
-                                                              globals
-                                                                  .deliverycheck,
-                                                          'lat_gps':
-                                                              globals.lat_gps,
-                                                          'long_gps':
-                                                              globals.long_gps,
-                                                          'address_gps': globals
-                                                              .address_gps,
-                                                          'ttprice': globals
-                                                                  .deliverycheck
-                                                              ? (globals.distance >
-                                                                      criticalkm
-                                                                  ? (ttprice * (1 - discount) +
-                                                                          more)
-                                                                      .toStringAsFixed(
-                                                                          1)
-                                                                  : (ttprice * (1 - discount) +
-                                                                          less)
-                                                                      .toStringAsFixed(
-                                                                          1))
-                                                              : (ttprice *
-                                                                          (1 -
-                                                                              discount) +
-                                                                      0)
-                                                                  .toStringAsFixed(
-                                                                      1),
-                                                          'ttitems': ttitems,
-                                                          'item_id_list':
-                                                              orderforbill
-                                                                  .item_id,
-                                                          'title_ar_list':
-                                                              orderforbill
-                                                                  .title_ar,
-                                                          'title_en_list':
-                                                              orderforbill
-                                                                  .title_en,
-                                                          'total_price_list':
-                                                              orderforbill
-                                                                  .total_price,
-                                                          'item_no_list':
-                                                              orderforbill
-                                                                  .item_no,
-                                                          'size_list':
-                                                              orderforbill.size,
-                                                          'url_list':
-                                                              orderforbill.url,
-                                                          'deliverytime':
-                                                              deliverytime,
-                                                        })
-                                                        .whenComplete(() =>
-                                                            Fluttertoast.showToast(
-                                                                msg: translator
-                                                                    .translate(
-                                                                        'done'),
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .black,
-                                                                textColor:
-                                                                    Colors
-                                                                        .white))
-                                                        .then((value) => Alert(
-                                                              onWillPopActive:
-                                                                  true,
-                                                              context: context,
-                                                              type: AlertType
-                                                                  .success,
-                                                              title: translator
-                                                                  .translate(
-                                                                      'done'),
-                                                              desc: translator
-                                                                  .translate(
-                                                                      'OrderTracking'),
-                                                              buttons: [
-                                                                DialogButton(
-                                                                  child: Text(
-                                                                    translator
-                                                                        .translate(
-                                                                            'confirmation'),
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            20),
-                                                                  ),
-                                                                  onPressed: () => Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              StepperPage())),
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .accentColor,
-                                                                ),
-                                                                DialogButton(
-                                                                  child: Text(
-                                                                    translator
-                                                                        .translate(
-                                                                            'home'),
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            20),
-                                                                  ),
-                                                                  onPressed: () => Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              HomePage())),
-                                                                  color: Colors
-                                                                      .black,
-                                                                )
-                                                              ],
-                                                            ).show());
-                                                    await _showNotificationCustomSound(
-                                                        ttitems,
-                                                        amount,
-                                                        deliverytime);
-                                                    _load = false;
-                                                  });
-                                                  // Navigator.of(context).pushReplacement(
-                                                  //     MaterialPageRoute(
-                                                  //         builder: (context) =>
-                                                  //             ThankYouPage()));
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                      msg: 'faild payment',
-                                                      backgroundColor:
-                                                          Colors.black,
-                                                      textColor: Colors.white);
-                                                }
+                                                // print('Response status');
+                                                // print(response);
+                                                // if (response.status == 'A') {
+                                                //   // Approved
+                                                //   print(
+                                                //       'Response status: ${response.message}');
+                                                //   DateTime now = DateTime.now();
+                                                //   final orderbranchdatabaseReference =
+                                                //       FirebaseDatabase.instance
+                                                //           .reference()
+                                                //           .child(
+                                                //               "orderListforBranch")
+                                                //           .child(globals
+                                                //               .branch_id);
+                                                //   final orderuserdatabaseReference =
+                                                //       FirebaseDatabase.instance
+                                                //           .reference()
+                                                //           .child(
+                                                //               "orderListforUser")
+                                                //           .child(_userid);
+                                                //   String orderid =
+                                                //       orderbranchdatabaseReference
+                                                //           .push()
+                                                //           .key;
+                                                //   final ReferenceOrderId =
+                                                //       FirebaseDatabase.instance
+                                                //           .reference()
+                                                //           .child(
+                                                //               'OrderIdAndBranchId');
+                                                //   ReferenceOrderId.child(
+                                                //           _userid)
+                                                //       .set({
+                                                //     'OrderId': orderid,
+                                                //     'BranchId':
+                                                //         globals.branch_id,
+                                                //   });
+                                                //   final ReferenceStatusOrder =
+                                                //       FirebaseDatabase.instance
+                                                //           .reference()
+                                                //           .child(
+                                                //               'NotificationStatusOrder');
+                                                //   ReferenceStatusOrder.child(
+                                                //           _userid)
+                                                //       .child(orderid)
+                                                //       .update({
+                                                //     'OrderStatus': 0,
+                                                //   });
+                                                //   orderbranchdatabaseReference
+                                                //       .child(orderid)
+                                                //       .set({
+                                                //     'carrange': arrange,
+                                                //     'orderId': orderid,
+                                                //     'userid': _userid,
+                                                //     'cdate': now.toString(),
+                                                //     'NumberPhoneUser':
+                                                //         _NumberPhone,
+                                                //     'Payment': 'online payment',
+                                                //     'branch_id':
+                                                //         globals.branch_id,
+                                                //     'deliverycheck':
+                                                //         globals.deliverycheck,
+                                                //     'lat_gps': globals.lat_gps,
+                                                //     'long_gps':
+                                                //         globals.long_gps,
+                                                //     'address_gps':
+                                                //         globals.address_gps,
+                                                //     'ttprice': globals
+                                                //             .deliverycheck
+                                                //         ? (globals.distance >
+                                                //                 criticalkm
+                                                //             ? (ttprice *
+                                                //                         (1 -
+                                                //                             discount) +
+                                                //                     more)
+                                                //                 .toStringAsFixed(
+                                                //                     1)
+                                                //             : (ttprice *
+                                                //                         (1 -
+                                                //                             discount) +
+                                                //                     less)
+                                                //                 .toStringAsFixed(
+                                                //                     1))
+                                                //         : (ttprice *
+                                                //                     (1 -
+                                                //                         discount) +
+                                                //                 0)
+                                                //             .toStringAsFixed(1),
+                                                //     'ttitems': ttitems,
+                                                //     'item_id_list':
+                                                //         orderforbill.item_id,
+                                                //     'title_ar_list':
+                                                //         orderforbill.title_ar,
+                                                //     'title_en_list':
+                                                //         orderforbill.title_en,
+                                                //     'total_price_list':
+                                                //         orderforbill
+                                                //             .total_price,
+                                                //     'item_no_list':
+                                                //         orderforbill.item_no,
+                                                //     'size_list':
+                                                //         orderforbill.size,
+                                                //     'url_list':
+                                                //         orderforbill.url,
+                                                //     'deliverytime':
+                                                //         deliverytime,
+                                                //   }).whenComplete(() async {
+                                                //     orderuserdatabaseReference
+                                                //         .child(orderid)
+                                                //         .set({
+                                                //           'carrange': arrange,
+                                                //           'orderId': orderid,
+                                                //           'userid': _userid,
+                                                //           'cdate':
+                                                //               now.toString(),
+                                                //           'NumberPhoneUser':
+                                                //               _NumberPhone,
+                                                //           'Payment':
+                                                //               'online payment',
+                                                //           'branch_id':
+                                                //               globals.branch_id,
+                                                //           'deliverycheck':
+                                                //               globals
+                                                //                   .deliverycheck,
+                                                //           'lat_gps':
+                                                //               globals.lat_gps,
+                                                //           'long_gps':
+                                                //               globals.long_gps,
+                                                //           'address_gps': globals
+                                                //               .address_gps,
+                                                //           'ttprice': globals
+                                                //                   .deliverycheck
+                                                //               ? (globals.distance >
+                                                //                       criticalkm
+                                                //                   ? (ttprice * (1 - discount) +
+                                                //                           more)
+                                                //                       .toStringAsFixed(
+                                                //                           1)
+                                                //                   : (ttprice * (1 - discount) +
+                                                //                           less)
+                                                //                       .toStringAsFixed(
+                                                //                           1))
+                                                //               : (ttprice *
+                                                //                           (1 -
+                                                //                               discount) +
+                                                //                       0)
+                                                //                   .toStringAsFixed(
+                                                //                       1),
+                                                //           'ttitems': ttitems,
+                                                //           'item_id_list':
+                                                //               orderforbill
+                                                //                   .item_id,
+                                                //           'title_ar_list':
+                                                //               orderforbill
+                                                //                   .title_ar,
+                                                //           'title_en_list':
+                                                //               orderforbill
+                                                //                   .title_en,
+                                                //           'total_price_list':
+                                                //               orderforbill
+                                                //                   .total_price,
+                                                //           'item_no_list':
+                                                //               orderforbill
+                                                //                   .item_no,
+                                                //           'size_list':
+                                                //               orderforbill.size,
+                                                //           'url_list':
+                                                //               orderforbill.url,
+                                                //           'deliverytime':
+                                                //               deliverytime,
+                                                //         })
+                                                //         .whenComplete(() =>
+                                                //             Fluttertoast.showToast(
+                                                //                 msg: translator
+                                                //                     .translate(
+                                                //                         'done'),
+                                                //                 backgroundColor:
+                                                //                     Colors
+                                                //                         .black,
+                                                //                 textColor:
+                                                //                     Colors
+                                                //                         .white))
+                                                //         .then((value) => Alert(
+                                                //               onWillPopActive:
+                                                //                   true,
+                                                //               context: context,
+                                                //               type: AlertType
+                                                //                   .success,
+                                                //               title: translator
+                                                //                   .translate(
+                                                //                       'done'),
+                                                //               desc: translator
+                                                //                   .translate(
+                                                //                       'OrderTracking'),
+                                                //               buttons: [
+                                                //                 DialogButton(
+                                                //                   child: Text(
+                                                //                     translator
+                                                //                         .translate(
+                                                //                             'confirmation'),
+                                                //                     style: TextStyle(
+                                                //                         color: Colors
+                                                //                             .white,
+                                                //                         fontSize:
+                                                //                             20),
+                                                //                   ),
+                                                //                   onPressed: () => Navigator.push(
+                                                //                       context,
+                                                //                       MaterialPageRoute(
+                                                //                           builder: (context) =>
+                                                //                               StepperPage())),
+                                                //                   color: Theme.of(
+                                                //                           context)
+                                                //                       .accentColor,
+                                                //                 ),
+                                                //                 DialogButton(
+                                                //                   child: Text(
+                                                //                     translator
+                                                //                         .translate(
+                                                //                             'home'),
+                                                //                     style: TextStyle(
+                                                //                         color: Colors
+                                                //                             .white,
+                                                //                         fontSize:
+                                                //                             20),
+                                                //                   ),
+                                                //                   onPressed: () => Navigator.push(
+                                                //                       context,
+                                                //                       MaterialPageRoute(
+                                                //                           builder: (context) =>
+                                                //                               HomePage())),
+                                                //                   color: Colors
+                                                //                       .black,
+                                                //                 )
+                                                //               ],
+                                                //             ).show());
+                                                //     await _showNotificationCustomSound(
+                                                //         ttitems,
+                                                //         amount,
+                                                //         deliverytime);
+                                                //     _load = false;
+                                                //   });
+                                                //   // Navigator.of(context).pushReplacement(
+                                                //   //     MaterialPageRoute(
+                                                //   //         builder: (context) =>
+                                                //   //             ThankYouPage()));
+                                                // } else {
+                                                //   Fluttertoast.showToast(
+                                                //       msg: 'faild payment',
+                                                //       backgroundColor:
+                                                //           Colors.black,
+                                                //       textColor: Colors.white);
+                                                // }
                                               } catch (e) {
                                                 setState(() {});
                                               }
@@ -1844,7 +1873,18 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                               splitedText[3],
                                               splitedText[4],
                                             );
-                                            Telr _Telr = new Telr();
+                                            Telr _Telr = new Telr(
+                                                _NumberPhone,
+                                                _userid,
+                                                deliverytime,
+                                                criticalkm,
+                                                ttprice,
+                                                discount,
+                                                more,
+                                                less,
+                                                arrange,
+                                                ttitems,
+                                                context);
                                             try {
                                               PaymentResponse response =
                                                   await _Telr.payForOrder(
@@ -1855,246 +1895,246 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                                       _cEmail,
                                                       context);
 
-                                              if (response.status == 200) {
-                                                // Approved
-                                                print(
-                                                    'Response status: ${response.status}');
-                                                DateTime now = DateTime.now();
-                                                final orderbranchdatabaseReference =
-                                                    FirebaseDatabase.instance
-                                                        .reference()
-                                                        .child(
-                                                            "orderListforBranch")
-                                                        .child(
-                                                            globals.branch_id);
-                                                final orderuserdatabaseReference =
-                                                    FirebaseDatabase.instance
-                                                        .reference()
-                                                        .child(
-                                                            "orderListforUser")
-                                                        .child(_userid);
-                                                String orderid =
-                                                    orderbranchdatabaseReference
-                                                        .push()
-                                                        .key;
-                                                final ReferenceOrderId =
-                                                    FirebaseDatabase.instance
-                                                        .reference()
-                                                        .child(
-                                                            'OrderIdAndBranchId');
-                                                ReferenceOrderId.child(_userid)
-                                                    .set({
-                                                  'OrderId': orderid,
-                                                  'BranchId': globals.branch_id,
-                                                });
-                                                final ReferenceStatusOrder =
-                                                    FirebaseDatabase.instance
-                                                        .reference()
-                                                        .child(
-                                                            'NotificationStatusOrder');
-                                                ReferenceStatusOrder.child(
-                                                        _userid)
-                                                    .child(orderid)
-                                                    .update({
-                                                  'OrderStatus': 0,
-                                                });
-                                                orderbranchdatabaseReference
-                                                    .child(orderid)
-                                                    .set({
-                                                  'carrange': arrange,
-                                                  'orderId': orderid,
-                                                  'userid': _userid,
-                                                  'cdate': now.toString(),
-                                                  'NumberPhoneUser':
-                                                      _NumberPhone,
-                                                  'Payment': 'online payment',
-                                                  'branch_id':
-                                                      globals.branch_id,
-                                                  'deliverycheck':
-                                                      globals.deliverycheck,
-                                                  'lat_gps': globals.lat_gps,
-                                                  'long_gps': globals.long_gps,
-                                                  'address_gps':
-                                                      globals.address_gps,
-                                                  'ttprice': globals
-                                                          .deliverycheck
-                                                      ? (globals.distance >
-                                                              criticalkm
-                                                          ? (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  more)
-                                                              .toStringAsFixed(
-                                                                  1)
-                                                          : (ttprice *
-                                                                      (1 -
-                                                                          discount) +
-                                                                  less)
-                                                              .toStringAsFixed(
-                                                                  1))
-                                                      : (ttprice *
-                                                                  (1 -
-                                                                      discount) +
-                                                              0)
-                                                          .toStringAsFixed(1),
-                                                  'ttitems': ttitems,
-                                                  'item_id_list':
-                                                      orderforbill.item_id,
-                                                  'title_ar_list':
-                                                      orderforbill.title_ar,
-                                                  'title_en_list':
-                                                      orderforbill.title_en,
-                                                  'total_price_list':
-                                                      orderforbill.total_price,
-                                                  'item_no_list':
-                                                      orderforbill.item_no,
-                                                  'size_list':
-                                                      orderforbill.size,
-                                                  'url_list': orderforbill.url,
-                                                  'deliverytime': deliverytime,
-                                                }).whenComplete(() async {
-                                                  orderuserdatabaseReference
-                                                      .child(orderid)
-                                                      .set({
-                                                        'carrange': arrange,
-                                                        'orderId': orderid,
-                                                        'userid': _userid,
-                                                        'cdate': now.toString(),
-                                                        'NumberPhoneUser':
-                                                            _NumberPhone,
-                                                        'Payment':
-                                                            'online payment',
-                                                        'branch_id':
-                                                            globals.branch_id,
-                                                        'deliverycheck': globals
-                                                            .deliverycheck,
-                                                        'lat_gps':
-                                                            globals.lat_gps,
-                                                        'long_gps':
-                                                            globals.long_gps,
-                                                        'address_gps':
-                                                            globals.address_gps,
-                                                        'ttprice': globals
-                                                                .deliverycheck
-                                                            ? (globals.distance >
-                                                                    criticalkm
-                                                                ? (ttprice *
-                                                                            (1 -
-                                                                                discount) +
-                                                                        more)
-                                                                    .toStringAsFixed(
-                                                                        1)
-                                                                : (ttprice *
-                                                                            (1 -
-                                                                                discount) +
-                                                                        less)
-                                                                    .toStringAsFixed(
-                                                                        1))
-                                                            : (ttprice *
-                                                                        (1 -
-                                                                            discount) +
-                                                                    0)
-                                                                .toStringAsFixed(
-                                                                    1),
-                                                        'ttitems': ttitems,
-                                                        'item_id_list':
-                                                            orderforbill
-                                                                .item_id,
-                                                        'title_ar_list':
-                                                            orderforbill
-                                                                .title_ar,
-                                                        'title_en_list':
-                                                            orderforbill
-                                                                .title_en,
-                                                        'total_price_list':
-                                                            orderforbill
-                                                                .total_price,
-                                                        'item_no_list':
-                                                            orderforbill
-                                                                .item_no,
-                                                        'size_list':
-                                                            orderforbill.size,
-                                                        'url_list':
-                                                            orderforbill.url,
-                                                        'deliverytime':
-                                                            deliverytime,
-                                                      })
-                                                      .whenComplete(() =>
-                                                          Fluttertoast.showToast(
-                                                              msg: translator
-                                                                  .translate(
-                                                                      'done'),
-                                                              backgroundColor:
-                                                                  Colors.black,
-                                                              textColor:
-                                                                  Colors.white))
-                                                      .then((value) => Alert(
-                                                            onWillPopActive:
-                                                                true,
-                                                            context: context,
-                                                            type: AlertType
-                                                                .success,
-                                                            title: translator
-                                                                .translate(
-                                                                    'done'),
-                                                            desc: translator
-                                                                .translate(
-                                                                    'OrderTracking'),
-                                                            buttons: [
-                                                              DialogButton(
-                                                                child: Text(
-                                                                  translator
-                                                                      .translate(
-                                                                          'confirmation'),
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          20),
-                                                                ),
-                                                                onPressed: () => Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                StepperPage())),
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .accentColor,
-                                                              ),
-                                                              DialogButton(
-                                                                child: Text(
-                                                                  translator
-                                                                      .translate(
-                                                                          'home'),
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          20),
-                                                                ),
-                                                                onPressed: () => Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                HomePage())),
-                                                                color: Colors
-                                                                    .black,
-                                                              )
-                                                            ],
-                                                          ).show());
-                                                  await _showNotificationCustomSound(
-                                                      ttitems,
-                                                      amount,
-                                                      deliverytime);
-                                                  _load = false;
-                                                });
-                                                // Navigator.of(context).pushReplacement(
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             ThankYouPage()));
-                                              }
+                                              // if (response.status == 200) {
+                                              //   // Approved
+                                              //   print(
+                                              //       'Response status: ${response.status}');
+                                              //   DateTime now = DateTime.now();
+                                              //   final orderbranchdatabaseReference =
+                                              //       FirebaseDatabase.instance
+                                              //           .reference()
+                                              //           .child(
+                                              //               "orderListforBranch")
+                                              //           .child(
+                                              //               globals.branch_id);
+                                              //   final orderuserdatabaseReference =
+                                              //       FirebaseDatabase.instance
+                                              //           .reference()
+                                              //           .child(
+                                              //               "orderListforUser")
+                                              //           .child(_userid);
+                                              //   String orderid =
+                                              //       orderbranchdatabaseReference
+                                              //           .push()
+                                              //           .key;
+                                              //   final ReferenceOrderId =
+                                              //       FirebaseDatabase.instance
+                                              //           .reference()
+                                              //           .child(
+                                              //               'OrderIdAndBranchId');
+                                              //   ReferenceOrderId.child(_userid)
+                                              //       .set({
+                                              //     'OrderId': orderid,
+                                              //     'BranchId': globals.branch_id,
+                                              //   });
+                                              //   final ReferenceStatusOrder =
+                                              //       FirebaseDatabase.instance
+                                              //           .reference()
+                                              //           .child(
+                                              //               'NotificationStatusOrder');
+                                              //   ReferenceStatusOrder.child(
+                                              //           _userid)
+                                              //       .child(orderid)
+                                              //       .update({
+                                              //     'OrderStatus': 0,
+                                              //   });
+                                              //   orderbranchdatabaseReference
+                                              //       .child(orderid)
+                                              //       .set({
+                                              //     'carrange': arrange,
+                                              //     'orderId': orderid,
+                                              //     'userid': _userid,
+                                              //     'cdate': now.toString(),
+                                              //     'NumberPhoneUser':
+                                              //         _NumberPhone,
+                                              //     'Payment': 'online payment',
+                                              //     'branch_id':
+                                              //         globals.branch_id,
+                                              //     'deliverycheck':
+                                              //         globals.deliverycheck,
+                                              //     'lat_gps': globals.lat_gps,
+                                              //     'long_gps': globals.long_gps,
+                                              //     'address_gps':
+                                              //         globals.address_gps,
+                                              //     'ttprice': globals
+                                              //             .deliverycheck
+                                              //         ? (globals.distance >
+                                              //                 criticalkm
+                                              //             ? (ttprice *
+                                              //                         (1 -
+                                              //                             discount) +
+                                              //                     more)
+                                              //                 .toStringAsFixed(
+                                              //                     1)
+                                              //             : (ttprice *
+                                              //                         (1 -
+                                              //                             discount) +
+                                              //                     less)
+                                              //                 .toStringAsFixed(
+                                              //                     1))
+                                              //         : (ttprice *
+                                              //                     (1 -
+                                              //                         discount) +
+                                              //                 0)
+                                              //             .toStringAsFixed(1),
+                                              //     'ttitems': ttitems,
+                                              //     'item_id_list':
+                                              //         orderforbill.item_id,
+                                              //     'title_ar_list':
+                                              //         orderforbill.title_ar,
+                                              //     'title_en_list':
+                                              //         orderforbill.title_en,
+                                              //     'total_price_list':
+                                              //         orderforbill.total_price,
+                                              //     'item_no_list':
+                                              //         orderforbill.item_no,
+                                              //     'size_list':
+                                              //         orderforbill.size,
+                                              //     'url_list': orderforbill.url,
+                                              //     'deliverytime': deliverytime,
+                                              //   }).whenComplete(() async {
+                                              //     orderuserdatabaseReference
+                                              //         .child(orderid)
+                                              //         .set({
+                                              //           'carrange': arrange,
+                                              //           'orderId': orderid,
+                                              //           'userid': _userid,
+                                              //           'cdate': now.toString(),
+                                              //           'NumberPhoneUser':
+                                              //               _NumberPhone,
+                                              //           'Payment':
+                                              //               'online payment',
+                                              //           'branch_id':
+                                              //               globals.branch_id,
+                                              //           'deliverycheck': globals
+                                              //               .deliverycheck,
+                                              //           'lat_gps':
+                                              //               globals.lat_gps,
+                                              //           'long_gps':
+                                              //               globals.long_gps,
+                                              //           'address_gps':
+                                              //               globals.address_gps,
+                                              //           'ttprice': globals
+                                              //                   .deliverycheck
+                                              //               ? (globals.distance >
+                                              //                       criticalkm
+                                              //                   ? (ttprice *
+                                              //                               (1 -
+                                              //                                   discount) +
+                                              //                           more)
+                                              //                       .toStringAsFixed(
+                                              //                           1)
+                                              //                   : (ttprice *
+                                              //                               (1 -
+                                              //                                   discount) +
+                                              //                           less)
+                                              //                       .toStringAsFixed(
+                                              //                           1))
+                                              //               : (ttprice *
+                                              //                           (1 -
+                                              //                               discount) +
+                                              //                       0)
+                                              //                   .toStringAsFixed(
+                                              //                       1),
+                                              //           'ttitems': ttitems,
+                                              //           'item_id_list':
+                                              //               orderforbill
+                                              //                   .item_id,
+                                              //           'title_ar_list':
+                                              //               orderforbill
+                                              //                   .title_ar,
+                                              //           'title_en_list':
+                                              //               orderforbill
+                                              //                   .title_en,
+                                              //           'total_price_list':
+                                              //               orderforbill
+                                              //                   .total_price,
+                                              //           'item_no_list':
+                                              //               orderforbill
+                                              //                   .item_no,
+                                              //           'size_list':
+                                              //               orderforbill.size,
+                                              //           'url_list':
+                                              //               orderforbill.url,
+                                              //           'deliverytime':
+                                              //               deliverytime,
+                                              //         })
+                                              //         .whenComplete(() =>
+                                              //             Fluttertoast.showToast(
+                                              //                 msg: translator
+                                              //                     .translate(
+                                              //                         'done'),
+                                              //                 backgroundColor:
+                                              //                     Colors.black,
+                                              //                 textColor:
+                                              //                     Colors.white))
+                                              //         .then((value) => Alert(
+                                              //               onWillPopActive:
+                                              //                   true,
+                                              //               context: context,
+                                              //               type: AlertType
+                                              //                   .success,
+                                              //               title: translator
+                                              //                   .translate(
+                                              //                       'done'),
+                                              //               desc: translator
+                                              //                   .translate(
+                                              //                       'OrderTracking'),
+                                              //               buttons: [
+                                              //                 DialogButton(
+                                              //                   child: Text(
+                                              //                     translator
+                                              //                         .translate(
+                                              //                             'confirmation'),
+                                              //                     style: TextStyle(
+                                              //                         color: Colors
+                                              //                             .white,
+                                              //                         fontSize:
+                                              //                             20),
+                                              //                   ),
+                                              //                   onPressed: () => Navigator.push(
+                                              //                       context,
+                                              //                       MaterialPageRoute(
+                                              //                           builder:
+                                              //                               (context) =>
+                                              //                                   StepperPage())),
+                                              //                   color: Theme.of(
+                                              //                           context)
+                                              //                       .accentColor,
+                                              //                 ),
+                                              //                 DialogButton(
+                                              //                   child: Text(
+                                              //                     translator
+                                              //                         .translate(
+                                              //                             'home'),
+                                              //                     style: TextStyle(
+                                              //                         color: Colors
+                                              //                             .white,
+                                              //                         fontSize:
+                                              //                             20),
+                                              //                   ),
+                                              //                   onPressed: () => Navigator.push(
+                                              //                       context,
+                                              //                       MaterialPageRoute(
+                                              //                           builder:
+                                              //                               (context) =>
+                                              //                                   HomePage())),
+                                              //                   color: Colors
+                                              //                       .black,
+                                              //                 )
+                                              //               ],
+                                              //             ).show());
+                                              //     await _showNotificationCustomSound(
+                                              //         ttitems,
+                                              //         amount,
+                                              //         deliverytime);
+                                              //     _load = false;
+                                              //   });
+                                              //   // Navigator.of(context).pushReplacement(
+                                              //   //     MaterialPageRoute(
+                                              //   //         builder: (context) =>
+                                              //   //             ThankYouPage()));
+                                              // }
                                             } catch (e) {
                                               setState(() {});
                                             }
@@ -2129,7 +2169,6 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                                       textColor: Colors.white);
                                 } else {
                                   setState(() {
-                                    _load = true;
                                     Future.delayed(Duration(seconds: 0),
                                         () async {
                                       OrderItemforBill orderforbill1 =
@@ -2953,5 +2992,152 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
             ),
           );
         });
+  }
+
+  void chickPaymentSucsse(PaymentResponse paymentResponse) {
+    print('Sucsse');
+    print(paymentResponse.status);
+
+    var amount = globals.deliverycheck
+        ? (globals.distance > criticalkm
+            ? (ttprice * (1 - discount) + more).toStringAsFixed(1)
+            : (ttprice * (1 - discount) + less).toStringAsFixed(1))
+        : (ttprice * (1 - discount) + 0).toStringAsFixed(0);
+    Future.delayed(Duration(seconds: 3), () async {
+      OrderItemforBill orderforbill1 =
+          await databaseHelper.alldatafororder().then((orderforbill) async {
+        if (paymentResponse.status == 'A') {
+          // Approved
+          print('Response message: ${paymentResponse.message}');
+          print('Response tranref: ${paymentResponse.tranref}');
+          DateTime now = DateTime.now();
+          final orderbranchdatabaseReference = FirebaseDatabase.instance
+              .reference()
+              .child("orderListforBranch")
+              .child(globals.branch_id);
+          final orderuserdatabaseReference = FirebaseDatabase.instance
+              .reference()
+              .child("orderListforUser")
+              .child(_userid);
+          String orderid = orderbranchdatabaseReference.push().key;
+          final ReferenceOrderId =
+              FirebaseDatabase.instance.reference().child('OrderIdAndBranchId');
+          ReferenceOrderId.child(_userid).set({
+            'OrderId': orderid,
+            'BranchId': globals.branch_id,
+          });
+          final ReferenceStatusOrder = FirebaseDatabase.instance
+              .reference()
+              .child('NotificationStatusOrder');
+          ReferenceStatusOrder.child(_userid).child(orderid).update({
+            'OrderStatus': 0,
+          });
+          orderbranchdatabaseReference.child(orderid).set({
+            'carrange': arrange,
+            'orderId': orderid,
+            'userid': _userid,
+            'cdate': now.toString(),
+            'NumberPhoneUser': _NumberPhone,
+            'Payment': 'online payment',
+            'branch_id': globals.branch_id,
+            'deliverycheck': globals.deliverycheck,
+            'lat_gps': globals.lat_gps,
+            'long_gps': globals.long_gps,
+            'address_gps': globals.address_gps,
+            'ttprice': globals.deliverycheck
+                ? (globals.distance > criticalkm
+                    ? (ttprice * (1 - discount) + more).toStringAsFixed(1)
+                    : (ttprice * (1 - discount) + less).toStringAsFixed(1))
+                : (ttprice * (1 - discount) + 0).toStringAsFixed(1),
+            'ttitems': ttitems,
+            'item_id_list': orderforbill.item_id,
+            'title_ar_list': orderforbill.title_ar,
+            'title_en_list': orderforbill.title_en,
+            'total_price_list': orderforbill.total_price,
+            'item_no_list': orderforbill.item_no,
+            'size_list': orderforbill.size,
+            'url_list': orderforbill.url,
+            'deliverytime': deliverytime,
+          }).whenComplete(() async {
+            orderuserdatabaseReference
+                .child(orderid)
+                .set({
+                  'carrange': arrange,
+                  'orderId': orderid,
+                  'userid': _userid,
+                  'cdate': now.toString(),
+                  'NumberPhoneUser': _NumberPhone,
+                  'Payment': 'online payment',
+                  'branch_id': globals.branch_id,
+                  'deliverycheck': globals.deliverycheck,
+                  'lat_gps': globals.lat_gps,
+                  'long_gps': globals.long_gps,
+                  'address_gps': globals.address_gps,
+                  'ttprice': globals.deliverycheck
+                      ? (globals.distance > criticalkm
+                          ? (ttprice * (1 - discount) + more).toStringAsFixed(1)
+                          : (ttprice * (1 - discount) + less)
+                              .toStringAsFixed(1))
+                      : (ttprice * (1 - discount) + 0).toStringAsFixed(1),
+                  'ttitems': ttitems,
+                  'item_id_list': orderforbill.item_id,
+                  'title_ar_list': orderforbill.title_ar,
+                  'title_en_list': orderforbill.title_en,
+                  'total_price_list': orderforbill.total_price,
+                  'item_no_list': orderforbill.item_no,
+                  'size_list': orderforbill.size,
+                  'url_list': orderforbill.url,
+                  'deliverytime': deliverytime,
+                })
+                .whenComplete(() => Fluttertoast.showToast(
+                    msg: translator.translate('done'),
+                    backgroundColor: Colors.black,
+                    textColor: Colors.white))
+                .then((value) => Alert(
+                      onWillPopActive: true,
+                      context: context,
+                      type: AlertType.success,
+                      title: translator.translate('done'),
+                      desc: translator.translate('OrderTracking'),
+                      buttons: [
+                        DialogButton(
+                          child: Text(
+                            translator.translate('confirmation'),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StepperPage())),
+                          color: Theme.of(context).accentColor,
+                        ),
+                        DialogButton(
+                          child: Text(
+                            translator.translate('home'),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage())),
+                          color: Colors.black,
+                        )
+                      ],
+                    ).show());
+            await _showNotificationCustomSound(ttitems, amount, deliverytime);
+            _load = false;
+          });
+          // Navigator.of(context).pushReplacement(
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             ThankYouPage()));
+        } else {
+          Fluttertoast.showToast(
+              msg: 'faild payment',
+              backgroundColor: Colors.black,
+              textColor: Colors.white);
+        }
+      });
+    });
   }
 }

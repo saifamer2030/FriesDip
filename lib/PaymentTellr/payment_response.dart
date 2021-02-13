@@ -1,4 +1,4 @@
 class PaymentResponse{
-  String status, id;
-  PaymentResponse(this.status, this.id);
+  String status, tranref, message;
+  PaymentResponse(this.status, this.tranref, this.message);
 }

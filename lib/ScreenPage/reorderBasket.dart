@@ -438,7 +438,7 @@ class _ReorderBasketState extends State<ReorderBasket> {
                                 'SA',
                                 'RIYADH',
                               'RIYADH', );
-                            Telr _Telr = new Telr();
+                            Telr _Telr ;
                             try {
                               PaymentResponse response = await _Telr.payForOrder(int.parse(widget.re_orderList.ttprice), _address, null, arrange,'_cEmail',context);
                               if (response.status == 200) {
