@@ -298,7 +298,7 @@ class Telr {
             ? (ttprice * (1 - discount) + more).toStringAsFixed(1)
             : (ttprice * (1 - discount) + less).toStringAsFixed(1))
         : (ttprice * (1 - discount) + 0).toStringAsFixed(0);
-    Future.delayed(Duration(seconds: 3), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       OrderItemforBill orderforbill1 =
           await databaseHelper.alldatafororder().then((orderforbill) async {
         if (paymentResponse.status == 'A') {
@@ -386,7 +386,8 @@ class Telr {
                   'url_list': orderforbill.url,
                   'deliverytime': deliverytime,
                 })
-                .then((value) => Alert(
+                .then((value) =>
+                    /*Alert(
                       onWillPopActive: true,
                       context: context,
                       type: AlertType.success,
@@ -416,9 +417,21 @@ class Telr {
                           color: Colors.black,
                         )
                       ],
-                    ).show())
+                    ).show()*/
+                    Fluttertoast.showToast(
+                        msg: translator.translate('donePayment'),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        fontSize: 16.0,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.black))
                 .then((value) => Fluttertoast.showToast(
-                    msg: translator.translate('done'),
+                    msg: translator.translate('sendorder'),
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.SNACKBAR,
+                    timeInSecForIosWeb: 1,
+                    fontSize: 16.0,
                     backgroundColor: Colors.black,
                     textColor: Colors.white));
             await _showNotificationCustomSound(ttitems, amount, deliverytime);
@@ -430,7 +443,11 @@ class Telr {
         } else {
           Fluttertoast.showToast(
               msg: 'faild payment',
-              backgroundColor: Colors.black,
+              fontSize: 16.0,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
               textColor: Colors.white);
         }
       });

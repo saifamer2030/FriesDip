@@ -124,6 +124,7 @@
     "enter_ur_address":  "Please, Enter_Your Address ",
     "no_delivery":  "Sorry, No Delivery to this Region",
     "done": "Done",
+    "donePayment": "Payment was successful",
     "numPayment": "Card Number",
     "month": "Month",
     "year": "Year",
